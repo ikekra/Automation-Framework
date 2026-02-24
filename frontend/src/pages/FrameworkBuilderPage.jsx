@@ -1,10 +1,13 @@
-﻿import { FrameworkBuilderForm } from "../features/framework/components/FrameworkBuilderForm";
+﻿import { PageShell } from "../components/PageShell";
+import { FrameworkBuilderForm } from "../features/framework/components/FrameworkBuilderForm";
 
 export const FrameworkBuilderPage = () => {
   return (
-    <section>
-      <h1>Framework Builder</h1>
+    <PageShell
+      title="Framework Builder"
+      subtitle="Configure your tech stack and generate a downloadable starter framework."
+    >
       <FrameworkBuilderForm />
-    </section>
+    </PageShell>
   );
 };

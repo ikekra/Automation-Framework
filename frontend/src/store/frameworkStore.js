@@ -12,6 +12,12 @@ export const useFrameworkStore = create(
         }));
       },
 
+      deleteHistoryItem(id) {
+        set((state) => ({
+          history: state.history.filter((item) => item.id !== id)
+        }));
+      },
+
       clearHistory() {
         set({ history: [] });
       }
