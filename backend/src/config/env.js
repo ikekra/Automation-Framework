@@ -24,7 +24,9 @@ const env = {
   corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
   openaiApiKey: process.env.OPENAI_API_KEY || "",
   openaiModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-  mockAi: process.env.MOCK_AI === "true"
+  mockAi: process.env.MOCK_AI === "true",
+  appBaseUrl: process.env.APP_BASE_URL || "http://localhost:5000",
+  frameworkDownloadTtlMinutes: Number(process.env.FRAMEWORK_DOWNLOAD_TTL_MINUTES) || 30
 };
 
 export default Object.freeze(env);

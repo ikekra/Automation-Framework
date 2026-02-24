@@ -19,7 +19,9 @@ const frameworkSchema = new mongoose.Schema(
     prompt: { type: String, required: true },
     folderStructure: [{ type: String, required: true }],
     files: [generatedFileSchema],
-    rawResponse: { type: String, default: null }
+    rawResponse: { type: String, default: null },
+    downloadTokenHash: { type: String, default: null, index: true },
+    downloadTokenExpiresAt: { type: Date, default: null, index: true }
   },
   {
     timestamps: true
