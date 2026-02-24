@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import env from "./config/env.js";
 import healthRoute from "./routes/health.route.js";
 import authRoute from "./modules/auth/routes/auth.route.js";
+import frameworkRoute from "./modules/framework/routes/framework.route.js";
 import { requestLogger } from "./middleware/requestLogger.js";
 import { globalRateLimiter } from "./middleware/rateLimiter.js";
 import { notFound } from "./middleware/notFound.js";
@@ -23,6 +24,7 @@ app.use(requestLogger);
 
 app.use("/api/v1", healthRoute);
 app.use("/api/v1/auth", authRoute);
+app.use("/api/framework", frameworkRoute);
 
 app.use(notFound);
 app.use(errorHandler);

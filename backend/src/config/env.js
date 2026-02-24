@@ -21,7 +21,10 @@ const env = {
   refreshTokenExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
   refreshCookieName: process.env.REFRESH_COOKIE_NAME || "autoforge_refresh",
   bcryptSaltRounds: Number(process.env.BCRYPT_SALT_ROUNDS) || 12,
-  corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173"
+  corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
+  openaiApiKey: process.env.OPENAI_API_KEY || "",
+  openaiModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+  mockAi: process.env.MOCK_AI === "true"
 };
 
 export default Object.freeze(env);
