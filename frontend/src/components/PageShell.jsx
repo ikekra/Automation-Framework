@@ -1,9 +1,9 @@
-﻿import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 
 export const PageShell = ({ title, subtitle, children, action }) => {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 10 }}
+    <Motion.section
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
@@ -11,12 +11,13 @@ export const PageShell = ({ title, subtitle, children, action }) => {
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
-          {subtitle ? <p className="mt-1 text-sm text-slate-600">{subtitle}</p> : null}
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">{title}</h1>
+          {subtitle ? <p className="mt-2 text-sm text-muted sm:text-base">{subtitle}</p> : null}
         </div>
         {action ? <div>{action}</div> : null}
       </div>
       {children}
-    </motion.section>
+    </Motion.section>
   );
 };
+

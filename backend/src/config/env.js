@@ -1,4 +1,4 @@
-﻿import dotenv from "dotenv";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -26,7 +26,8 @@ const env = {
   openaiModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
   mockAi: process.env.MOCK_AI === "true",
   appBaseUrl: process.env.APP_BASE_URL || "http://localhost:5000",
-  frameworkDownloadTtlMinutes: Number(process.env.FRAMEWORK_DOWNLOAD_TTL_MINUTES) || 30
+  frameworkDownloadTtlMinutes: Number(process.env.FRAMEWORK_DOWNLOAD_TTL_MINUTES) || 30,
+  testAnalyzeTimeoutMs: Number(process.env.TEST_ANALYZE_TIMEOUT_MS) || 30000
 };
 
 export default Object.freeze(env);

@@ -1,4 +1,4 @@
-﻿import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { LandingPage } from "../pages/LandingPage";
 import { LoginPage } from "../pages/LoginPage";
@@ -6,8 +6,11 @@ import { RegisterPage } from "../pages/RegisterPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { FrameworkBuilderPage } from "../pages/FrameworkBuilderPage";
 import { HistoryPage } from "../pages/HistoryPage";
+import { WebAppTesterPage } from "../pages/WebAppTesterPage";
+import { InternalSelfTestPage } from "../pages/InternalSelfTestPage";
 import { ProtectedRoute } from "../routes/ProtectedRoute";
 import { PublicOnlyRoute } from "../routes/PublicOnlyRoute";
+import { AdminRoute } from "../routes/AdminRoute";
 import { AppLayout } from "../layouts/AppLayout";
 
 export const AppRouter = () => {
@@ -28,6 +31,10 @@ export const AppRouter = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/framework-builder" element={<FrameworkBuilderPage />} />
             <Route path="/history" element={<HistoryPage />} />
+            <Route path="/web-app-tester" element={<WebAppTesterPage />} />
+            <Route element={<AdminRoute />}>
+              <Route path="/internal-self-test" element={<InternalSelfTestPage />} />
+            </Route>
           </Route>
         </Route>
 
