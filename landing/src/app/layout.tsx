@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "@/components/providers";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -14,10 +14,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} bg-slate-950 font-sans text-slate-100 antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
+      <body className={`${inter.variable} bg-background font-sans text-foreground antialiased`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,23 +1,38 @@
 import Link from "next/link";
+import { Github, Linkedin, Twitter } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer id="contact" className="border-t border-slate-200/70 py-12 dark:border-white/10">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 text-sm text-slate-600 sm:px-6 dark:text-slate-300 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="font-semibold text-slate-900 dark:text-white">AutoForge AI</p>
-          <p className="mt-1 text-slate-500 dark:text-slate-400">AI-Powered Web Application Testing</p>
+    <footer id="contact" className="border-t border-slate-200/80 bg-white/80 py-14 dark:border-slate-800 dark:bg-slate-950/80">
+      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 sm:px-6 md:grid-cols-3">
+        <div className="space-y-2">
+          <p className="text-base font-semibold text-slate-900 dark:text-slate-100">AutoForge</p>
+          <p className="text-sm text-slate-600 dark:text-slate-300">Modern AI-driven web testing for quality teams.</p>
         </div>
 
-        <div className="flex flex-wrap gap-4">
-          <Link href="#features" className="hover:text-slate-900 dark:hover:text-white">Features</Link>
-          <Link href="#pricing" className="hover:text-slate-900 dark:hover:text-white">Pricing</Link>
-          <Link href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-slate-900 dark:hover:text-white">GitHub</Link>
-          <Link href="mailto:hello@autoforge.ai" className="hover:text-slate-900 dark:hover:text-white">Contact</Link>
-        </div>
+        <nav className="flex flex-wrap gap-4 text-sm" aria-label="Footer">
+          <Link href="#home" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Home</Link>
+          <Link href="#features" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Features</Link>
+          <Link href="#about" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">About</Link>
+          <Link href="#pricing" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Pricing</Link>
+          <Link href="#contact" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Contact</Link>
+        </nav>
 
-        <p className="text-slate-500">(c) {new Date().getFullYear()} AutoForge AI. All rights reserved.</p>
+        <div className="flex items-start justify-start gap-3 md:justify-end">
+          <Link href="https://github.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-indigo-600 dark:hover:text-indigo-300">
+            <Github className="h-4 w-4" />
+          </Link>
+          <Link href="https://linkedin.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-indigo-600 dark:hover:text-indigo-300">
+            <Linkedin className="h-4 w-4" />
+          </Link>
+          <Link href="https://x.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-indigo-600 dark:hover:text-indigo-300">
+            <Twitter className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
+      <p className="mx-auto mt-10 w-full max-w-6xl px-4 text-sm text-slate-500 sm:px-6 dark:text-slate-400">
+        &copy; {new Date().getFullYear()} AutoForge. All rights reserved.
+      </p>
     </footer>
   );
 };

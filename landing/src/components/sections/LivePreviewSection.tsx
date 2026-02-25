@@ -9,22 +9,18 @@ import { Card } from "@/components/ui/card";
 const screenshotImage =
   "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1300&q=80";
 
-const useCountUp = (target: number, duration = 1000) => {
+const useCountUp = (target: number, duration = 900) => {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
     let frame = 0;
-    const steps = 30;
+    const steps = 24;
     const increment = target / steps;
     const interval = duration / steps;
 
     const id = window.setInterval(() => {
       frame += 1;
-      setValue((prev) => {
-        const next = prev + increment;
-        return frame >= steps ? target : next;
-      });
-
+      setValue((prev) => (frame >= steps ? target : prev + increment));
       if (frame >= steps) {
         window.clearInterval(id);
       }
@@ -51,45 +47,45 @@ export const LivePreviewSection = () => {
   );
 
   return (
-    <AnimatedSection className="px-4 py-20 sm:px-6">
-      <div className="mx-auto w-full max-w-6xl space-y-8">
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.24em] text-indigo-600 dark:text-indigo-300">Live Preview</p>
-          <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl dark:text-white">Real-Time Error Report Experience</h2>
-        </div>
+    <AnimatedSection className="px-4 py-24 sm:px-6">
+      <div className="mx-auto w-full max-w-6xl space-y-10">
+        <header className="space-y-3">
+          <p className="text-xs uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">Live Preview</p>
+          <h2 className="text-3xl font-semibold text-slate-900 sm:text-4xl dark:text-slate-100">Structured Report Interface</h2>
+        </header>
 
         <Motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-          className="grid gap-4 lg:grid-cols-[1.2fr_1fr]"
+          transition={{ duration: 0.35 }}
+          className="grid gap-6 lg:grid-cols-[1.2fr_1fr]"
         >
           <Card className="overflow-hidden p-4">
             <Image
               src={screenshotImage}
-              alt="Report screenshot preview"
+              alt="Bug report screenshot preview"
               width={1000}
               height={620}
-              className="h-auto w-full rounded-xl border border-slate-200/60 object-cover dark:border-white/15"
+              className="h-auto w-full rounded-lg border border-slate-200 object-cover dark:border-slate-800"
               loading="lazy"
             />
           </Card>
 
-          <div className="grid gap-4">
-            <Card className="p-5">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">Detected Issues</p>
-              <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                <li className="rounded-lg bg-rose-500/15 px-3 py-2 text-rose-700 dark:text-rose-200">Unhandled promise rejection on checkout flow</li>
-                <li className="rounded-lg bg-amber-500/15 px-3 py-2 text-amber-700 dark:text-amber-200">Slow API response on /pricing endpoint</li>
-                <li className="rounded-lg bg-indigo-500/15 px-3 py-2 text-indigo-700 dark:text-indigo-200">Console warning from deprecated package</li>
+          <div className="grid gap-6">
+            <Card className="p-6">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Detected Issues</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                <li className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200">Unhandled promise rejection on checkout flow</li>
+                <li className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">Slow API response on /pricing endpoint</li>
+                <li className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">Console warning from deprecated package</li>
               </ul>
             </Card>
 
-            <Card className="grid grid-cols-3 gap-3 p-5 text-center">
+            <Card className="grid grid-cols-3 gap-4 p-6 text-center">
               {metrics.map((metric) => (
                 <div key={metric.label}>
-                  <p className="text-xl font-bold text-slate-900 dark:text-white">
+                  <p className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                     {metric.value}
                     {metric.suffix || ""}
                   </p>
