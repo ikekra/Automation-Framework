@@ -10,7 +10,7 @@ export const GlassCard = ({ className = "", hover = false, children, ...props })
         hover
           ? {
               y: -4,
-              boxShadow: "0 20px 45px -26px rgba(56, 189, 248, 0.5)"
+              boxShadow: "0 24px 48px -28px rgba(15, 122, 107, 0.45)"
             }
           : undefined
       }

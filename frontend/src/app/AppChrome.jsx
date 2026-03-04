@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "./AppRouter";
 import { AppBackground } from "../components/AppBackground";
 import { ThemeToggle } from "../components/ui/ThemeToggle";
+import { ToastProvider } from "../context/ToastContext";
 import { useThemeStore } from "../store/themeStore";
 
 export const AppChrome = () => {
@@ -14,7 +15,7 @@ export const AppChrome = () => {
   }, [theme]);
 
   return (
-    <>
+    <ToastProvider>
       <AppBackground />
       <div className="fixed right-4 top-4 z-50 sm:right-6 sm:top-6">
         <ThemeToggle />
@@ -22,6 +23,6 @@ export const AppChrome = () => {
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>
-    </>
+    </ToastProvider>
   );
 };

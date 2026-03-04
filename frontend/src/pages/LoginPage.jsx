@@ -1,4 +1,4 @@
-import { motion as Motion } from "framer-motion";
+﻿import { motion as Motion } from "framer-motion";
 import { AuthForm } from "../features/auth/components/AuthForm";
 import { GlassCard } from "../components/ui/GlassCard";
 import { LazyBackgroundImage } from "../components/ui/LazyBackgroundImage";
@@ -9,13 +9,18 @@ const authImage =
 export const LoginPage = () => {
   return (
     <main className="grid min-h-screen place-items-center px-4 py-8">
-      <GlassCard className="relative w-full max-w-4xl overflow-hidden p-0 md:grid md:grid-cols-[1.1fr,1fr]">
+      <GlassCard className="relative w-full max-w-5xl overflow-hidden p-0 md:grid md:grid-cols-[1.1fr,1fr]">
         <div className="relative hidden md:block">
           <LazyBackgroundImage src={authImage} alt="Team working on software" className="h-full w-full object-cover" priority />
           <div className="absolute inset-0 bg-slate-950/35" />
           <div className="absolute bottom-6 left-6 right-6 text-white">
             <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan-200">AutoForge</p>
             <h2 className="mt-2 text-2xl font-bold">Build smarter automation foundations.</h2>
+            <ul className="mt-4 space-y-2 text-sm text-slate-100/90">
+              <li>Secure email OTP login</li>
+              <li>Optional two-factor authentication</li>
+              <li>Reusable framework templates</li>
+            </ul>
           </div>
         </div>
 
@@ -27,6 +32,11 @@ export const LoginPage = () => {
         >
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Welcome back</h1>
           <p className="mt-1 text-sm text-muted">Sign in to continue building frameworks.</p>
+
+          <div className="mt-4 rounded-2xl border border-white/20 bg-white/50 p-3 text-xs text-slate-700 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200">
+            Use password or request a login code via email. Two-factor supported.
+          </div>
+
           <div className="mt-6">
             <AuthForm mode="login" />
           </div>
@@ -35,4 +45,3 @@ export const LoginPage = () => {
     </main>
   );
 };
-

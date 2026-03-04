@@ -11,10 +11,11 @@ export const PageShell = ({ title, subtitle, children, action }) => {
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">{title}</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">Workspace</p>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">{title}</h1>
           {subtitle ? <p className="mt-2 text-sm text-muted sm:text-base">{subtitle}</p> : null}
         </div>
-        {action ? <div>{action}</div> : null}
+        {action ? <div className="rounded-2xl border border-white/30 bg-white/60 p-1 dark:border-white/10 dark:bg-slate-900/50">{action}</div> : null}
       </div>
       {children}
     </Motion.section>

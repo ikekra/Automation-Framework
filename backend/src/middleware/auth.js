@@ -33,14 +33,28 @@ export const authenticate = async (req, _res, next) => {
       throw new AppError("User not found", 401);
     }
 
+    if (!user.emailVerified) {
+      throw new AppError("Email not verified", 403, { code: "EMAIL_NOT_VERIFIED" });
+    }
+
     if (payload.tokenVersion !== user.tokenVersion) {
       throw new AppError("Session invalidated", 401);
     }
 
+    const lastLogin = user.lastLogin instanceof Date ? user.lastLogin.toISOString() : user.lastLogin || null;
+
     req.auth = {
       userId: user._id.toString(),
       role: user.role,
-      tokenVersion: user.tokenVersion
+      tokenVersion: user.tokenVersion,
+      name: user.name,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      organization: user.organization || null,
+      plan: user.plan || "Starter",
+      phone: user.phone || null,
+      lastLogin,
+      totpEnabled: Boolean(user.totpEnabled)
     };
 
     next();

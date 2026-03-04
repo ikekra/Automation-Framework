@@ -25,6 +25,7 @@
     "mongoose": "^8.6.1",
     "openai": "^6.24.0",
     "playwright": "^1.52.0",
+    "speakeasy": "^2.0.0",
     "winston": "^3.14.2",
     "zod": "^4.3.6"
   },

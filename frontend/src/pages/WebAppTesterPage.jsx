@@ -2,8 +2,10 @@ import { AnimatePresence, motion as Motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LoadingOverlay } from "../components/LoadingOverlay";
 import { PageShell } from "../components/PageShell";
+import { EmptyState } from "../components/ui/EmptyState";
 import { GlassCard } from "../components/ui/GlassCard";
 import { Skeleton } from "../components/ui/Skeleton";
+import { useToast } from "../context/ToastContext";
 import { testService } from "../services/api/testService";
 
 const severityClassMap = {
@@ -39,6 +41,7 @@ const SeverityBadge = ({ level }) => (
 );
 
 export const WebAppTesterPage = () => {
+  const { pushToast } = useToast();
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingReports, setLoadingReports] = useState(true);
@@ -107,8 +110,10 @@ export const WebAppTesterPage = () => {
       setCurrentReport(report);
       setUrl("");
       setQuery((prev) => ({ ...prev, page: 1 }));
+      pushToast({ message: "Analysis complete. Report generated.", tone: "success" });
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to analyze target URL");
+      pushToast({ message: err?.response?.data?.message || "Failed to analyze target URL", tone: "error" });
     } finally {
       setLoading(false);
     }
@@ -186,7 +191,12 @@ export const WebAppTesterPage = () => {
               ))}
             </div>
           ) : reports.length === 0 ? (
-            <p className="mt-4 text-sm text-muted">No reports yet.</p>
+            <div className="mt-4">
+              <EmptyState
+                title="No reports yet"
+                description="Run your first analysis to populate results. Tip: start with your staging URL."
+              />
+            </div>
           ) : (
             <div className="mt-4 space-y-2">
               {reports.map((report) => {
@@ -251,9 +261,23 @@ export const WebAppTesterPage = () => {
             className="space-y-4"
           >
             {!currentReport ? (
-              <GlassCard className="p-6">
-                <p className="text-sm text-muted">Run an analysis to view a structured report.</p>
-              </GlassCard>
+              <EmptyState
+                title="No analysis selected"
+                description="Run an analysis to view a structured report."
+                action={(
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => {
+                      if (!url) {
+                        setUrl("https://");
+                      }
+                    }}
+                  >
+                    Start new analysis
+                  </button>
+                )}
+              />
             ) : (
               <>
                 <GlassCard className="p-5">

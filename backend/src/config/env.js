@@ -25,9 +25,13 @@ const env = {
   openaiApiKey: process.env.OPENAI_API_KEY || "",
   openaiModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
   mockAi: process.env.MOCK_AI === "true",
+  mockEmail: process.env.MOCK_EMAIL !== "false",
   appBaseUrl: process.env.APP_BASE_URL || "http://localhost:5000",
   frameworkDownloadTtlMinutes: Number(process.env.FRAMEWORK_DOWNLOAD_TTL_MINUTES) || 30,
-  testAnalyzeTimeoutMs: Number(process.env.TEST_ANALYZE_TIMEOUT_MS) || 30000
+  testAnalyzeTimeoutMs: Number(process.env.TEST_ANALYZE_TIMEOUT_MS) || 30000,
+  emailFrom: process.env.EMAIL_FROM || "no-reply@autoforge.local",
+  emailVerifyTtlHours: Number(process.env.EMAIL_VERIFY_TTL_HOURS) || 24,
+  emailOtpTtlMinutes: Number(process.env.EMAIL_OTP_TTL_MINUTES) || 10
 };
 
 export default Object.freeze(env);

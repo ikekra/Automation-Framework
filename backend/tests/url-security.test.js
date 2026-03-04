@@ -44,3 +44,15 @@ test("assertUrlIsSafe blocks private DNS addresses", async () => {
     /blocked|private|hostname/i
   );
 });
+
+test("assertUrlIsSafe allows safe URLs", async () => {
+  await assert.doesNotReject(
+    () => assertUrlIsSafe("https://cdn.example.com/app.js", publicLookup)
+  );
+}); 
+test("assertUrlIsSafe blocks non-http URLs", async () => {
+  await assert.rejects(
+    () => assertUrlIsSafe("ftp://cdn.example.com/app.js", publicLookup),
+    /invalid|protocol/i
+  );
+});

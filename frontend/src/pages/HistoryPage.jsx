@@ -1,13 +1,17 @@
-import { motion as Motion } from "framer-motion";
+ï»¿import { motion as Motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { PageShell } from "../components/PageShell";
+import { EmptyState } from "../components/ui/EmptyState";
 import { GlassCard } from "../components/ui/GlassCard";
 import { Skeleton } from "../components/ui/Skeleton";
+import { useToast } from "../context/ToastContext";
 import { useFrameworkStore } from "../store/frameworkStore";
 
 export const HistoryPage = () => {
   const history = useFrameworkStore((state) => state.history);
   const deleteHistoryItem = useFrameworkStore((state) => state.deleteHistoryItem);
+  const { pushToast } = useToast();
   const [showSkeletons, setShowSkeletons] = useState(true);
 
   useEffect(() => {
@@ -27,9 +31,15 @@ export const HistoryPage = () => {
           ))}
         </div>
       ) : history.length === 0 ? (
-        <GlassCard className="p-8 text-center">
-          <p className="text-sm text-muted">No generations yet. Create your first framework from Builder.</p>
-        </GlassCard>
+        <EmptyState
+          title="No generations yet"
+          description="Create your first framework now to start building history."
+          action={(
+            <Link to="/framework-builder" className="btn-primary">
+              Build framework
+            </Link>
+          )}
+        />
       ) : (
         <div className="space-y-3">
           {history.map((item, index) => (
@@ -42,10 +52,10 @@ export const HistoryPage = () => {
             >
               <div>
                 <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {item.language} • {item.automationTool} • {item.testRunner}
+                  {item.language} â€¢ {item.automationTool} â€¢ {item.testRunner}
                 </p>
                 <p className="text-xs text-muted">
-                  {item.filesCount} files • {new Date(item.createdAt).toLocaleString()}
+                  {item.filesCount} files â€¢ {new Date(item.createdAt).toLocaleString()}
                 </p>
               </div>
 
@@ -57,7 +67,10 @@ export const HistoryPage = () => {
                 ) : null}
                 <button
                   type="button"
-                  onClick={() => deleteHistoryItem(item.id)}
+                  onClick={() => {
+                    deleteHistoryItem(item.id);
+                    pushToast({ message: "History item deleted.", tone: "success" });
+                  }}
                   className="btn-secondary border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-800 dark:text-rose-300 dark:hover:bg-rose-950/40"
                 >
                   Delete
@@ -70,4 +83,3 @@ export const HistoryPage = () => {
     </PageShell>
   );
 };
-

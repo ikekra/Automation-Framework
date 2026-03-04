@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import { LoadingOverlay } from "../../../components/LoadingOverlay";
+import { EmptyState } from "../../../components/ui/EmptyState";
 import { GlassCard } from "../../../components/ui/GlassCard";
+import { useToast } from "../../../context/ToastContext";
 import { frameworkService } from "../../../services/api/frameworkService";
 import { useFrameworkStore } from "../../../store/frameworkStore";
 
@@ -27,12 +29,20 @@ export const FrameworkBuilderForm = () => {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const addHistoryItem = useFrameworkStore((state) => state.addHistoryItem);
+  const { pushToast } = useToast();
 
   const canGoNext = useMemo(() => currentStep < steps.length - 1, [currentStep]);
   const canGoBack = useMemo(() => currentStep > 0, [currentStep]);
 
   const onChange = (key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const onReset = () => {
+    setForm(initialState);
+    setResponse(null);
+    setError("");
+    setCurrentStep(0);
   };
 
   const onSubmit = async (event) => {
@@ -53,8 +63,12 @@ export const FrameworkBuilderForm = () => {
         downloadLink: data.download?.link || "",
         createdAt: new Date().toISOString()
       });
+
+      pushToast({ message: "Framework generated successfully.", tone: "success" });
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to generate framework");
+      const message = err?.response?.data?.message || "Failed to generate framework";
+      setError(message);
+      pushToast({ message, tone: "error" });
     } finally {
       setLoading(false);
     }
@@ -163,6 +177,10 @@ export const FrameworkBuilderForm = () => {
                 Generate Framework
               </Motion.button>
             )}
+
+            <button type="button" onClick={onReset} className="btn-secondary">
+              Reset
+            </button>
           </div>
         </GlassCard>
 
@@ -183,12 +201,18 @@ export const FrameworkBuilderForm = () => {
               </a>
             ) : null}
           </GlassCard>
-        ) : null}
+        ) : (
+          <EmptyState
+            title="No framework generated yet"
+            description="Complete the steps above and click Generate to build a starter framework."
+            action={(
+              <button type="button" className="btn-primary" onClick={() => setCurrentStep(steps.length - 1)}>
+                Go to final step
+              </button>
+            )}
+          />
+        )}
       </form>
     </>
   );
 };
-
-
-
-
