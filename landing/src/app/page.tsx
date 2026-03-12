@@ -296,7 +296,7 @@ export default function Home() {
         </section>
 
         <section id="stats" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-          <div className="glass-card reveal grid gap-4 rounded-2xl px-6 py-6 text-center sm:grid-cols-4">
+          <div className="glass-card reveal grid gap-4 rounded-2xl px-5 py-5 text-center sm:grid-cols-4">
             {stats.map((stat, index) => (
               <div key={stat.label} className="flex flex-col gap-2">
                 <p className="text-2xl font-semibold text-white">{formattedCounts[index]}</p>
