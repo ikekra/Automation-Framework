@@ -261,7 +261,7 @@ export default function Home() {
         <section className="mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
           <div className="stagger flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1 text-xs text-[var(--muted-foreground)]" style={{ animationDelay: "0.1s" }}>
             <span className="badge-dot" />
-            v3.0 — Now with AI-powered pipelines
+            v3.1 — Now with AI-powered pipelines
           </div>
           <h1 className="stagger mt-6 text-4xl font-extrabold sm:text-6xl" style={{ animationDelay: "0.2s" }}>
             Automate Everything.
