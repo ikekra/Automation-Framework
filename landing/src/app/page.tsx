@@ -270,7 +270,7 @@ export default function Home() {
             </span>
           </h1>
           <p className="stagger mt-4 max-w-2xl text-base text-[var(--muted-foreground)] sm:text-lg" style={{ animationDelay: "0.3s" }}>
-            AutoFlow brings orchestration, observability, and security to every automation framework so your team ships confidently at scale.
+            AutoFlow brings orchestration, observability, and security to every automation framework so teams ship confidently at scale.
           </p>
           <div className="stagger mt-8 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: "0.4s" }}>
             <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">
