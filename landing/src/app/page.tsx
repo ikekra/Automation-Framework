@@ -500,7 +500,7 @@ export default function Home() {
       <footer className="border-t border-[var(--border)] py-6">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 text-xs text-[var(--dim-foreground)] sm:flex-row sm:px-6">
           <span className="font-semibold text-[var(--muted-foreground)]">⚡ AutoFlow</span>
-          <span>© 2026 AutoFlow. All rights reserved.</span>
+          <span>© 2026 AutoFlow</span>
           <div className="flex items-center gap-4">
             <Link href="#" className="hover:text-[var(--foreground)]">Privacy</Link>
             <Link href="#" className="hover:text-[var(--foreground)]">Terms</Link>
