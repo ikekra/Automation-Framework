@@ -336,7 +336,7 @@ export default function Home() {
               <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Code Showcase</p>
               <h2 className="text-3xl font-semibold sm:text-4xl">A pipeline your team can read</h2>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Define flows in a single config. AutoFlow handles orchestration, retries, and observability automatically.
+                Define flows in a single config. AutoFlow handles orchestration, retries, and observability for you.
               </p>
               <div className="glass-card mt-6 w-full max-w-[360px] overflow-hidden rounded-2xl border border-[var(--border)] sm:max-w-[420px] lg:ml-auto">
                 <Image
