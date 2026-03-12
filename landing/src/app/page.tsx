@@ -319,7 +319,7 @@ export default function Home() {
                 className="glass-card reveal group relative overflow-hidden rounded-2xl p-6"
                 style={{ transitionDelay: `${index * 90}ms` }}
               >
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-[rgba(0,229,255,0.08)] to-[rgba(124,58,237,0.12)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-[rgba(0,229,255,0.1)] to-[rgba(124,58,237,0.14)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="icon-tile mb-4 flex h-12 w-12 items-center justify-center rounded-2xl" style={{ color: feature.accent }}>
                   <span className="text-xl">{feature.icon}</span>
                 </div>
