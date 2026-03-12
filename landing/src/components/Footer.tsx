@@ -11,21 +11,20 @@ export const Footer = () => {
         </div>
 
         <nav className="flex flex-wrap gap-4 text-sm" aria-label="Footer">
-          <Link href="#home" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Home</Link>
-          <Link href="#features" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Features</Link>
-          <Link href="#about" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">About</Link>
-          <Link href="#pricing" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Pricing</Link>
-          <Link href="#contact" className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">Contact</Link>
+          <Link href="#home" className="text-slate-600 hover:text-[#1f3b73] dark:text-slate-300 dark:hover:text-[#7bc6ff]">Home</Link>
+          <Link href="#features" className="text-slate-600 hover:text-[#1f3b73] dark:text-slate-300 dark:hover:text-[#7bc6ff]">Features</Link>
+          <Link href="#about" className="text-slate-600 hover:text-[#1f3b73] dark:text-slate-300 dark:hover:text-[#7bc6ff]">About</Link>
+          <Link href="#contact" className="text-slate-600 hover:text-[#1f3b73] dark:text-slate-300 dark:hover:text-[#7bc6ff]">Contact</Link>
         </nav>
 
         <div className="flex items-start justify-start gap-3 md:justify-end">
-          <Link href="https://github.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-indigo-600 dark:hover:text-indigo-300">
+          <Link href="https://github.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-[#2fb7a0] hover:text-[#1f3b73] dark:border-slate-700 dark:text-slate-300 dark:hover:border-[#2fb7a0] dark:hover:text-[#7bc6ff]">
             <Github className="h-4 w-4" />
           </Link>
-          <Link href="https://linkedin.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-indigo-600 dark:hover:text-indigo-300">
+          <Link href="https://linkedin.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-[#2fb7a0] hover:text-[#1f3b73] dark:border-slate-700 dark:text-slate-300 dark:hover:border-[#2fb7a0] dark:hover:text-[#7bc6ff]">
             <Linkedin className="h-4 w-4" />
           </Link>
-          <Link href="https://x.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-indigo-600 dark:hover:text-indigo-300">
+          <Link href="https://x.com" target="_blank" rel="noreferrer" className="rounded-md border border-slate-300 p-2 text-slate-600 hover:border-[#2fb7a0] hover:text-[#1f3b73] dark:border-slate-700 dark:text-slate-300 dark:hover:border-[#2fb7a0] dark:hover:text-[#7bc6ff]">
             <Twitter className="h-4 w-4" />
           </Link>
         </div>

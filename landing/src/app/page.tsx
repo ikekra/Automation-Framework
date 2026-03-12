@@ -1,302 +1,513 @@
-"use client";
+﻿"use client";
 
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { motion as Motion } from "framer-motion";
-import {
-  Activity,
-  BrainCircuit,
-  CheckCircle2,
-  CircleDot,
-  Clock3,
-  Globe,
-  MessageSquareQuote,
-  Rocket,
-  Shield,
-  Sparkles
-} from "lucide-react";
-import { Footer } from "@/components/Footer";
-import { Hero } from "@/components/Hero";
-import { Navbar } from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import Link from "next/link";
+
+const navLinks = [
+  { label: "Features", href: "#features" },
+  { label: "Showcase", href: "#showcase" },
+  { label: "Pipeline", href: "#pipeline" },
+  { label: "Integrations", href: "#integrations" },
+  { label: "Pricing", href: "#pricing" }
+];
+
+const stats = [
+  { label: "tests/day", value: 2400000, suffix: "+" },
+  { label: "uptime", value: 9999, suffix: "%" },
+  { label: "integrations", value: 200, suffix: "+" },
+  { label: "engineers", value: 18000, suffix: "+" }
+];
 
 const features = [
   {
-    icon: Activity,
-    title: "Automated Monitoring",
-    description: "Track key user flows with repeatable checks and instant issue visibility."
+    title: "Zero-config setup",
+    description: "Spin up new test pipelines with a single config file and opinionated defaults.",
+    accent: "#00e5ff",
+    icon: "⚡"
   },
   {
-    icon: BrainCircuit,
-    title: "AI Issue Insights",
-    description: "Get likely root causes and clear next actions instead of raw logs."
+    title: "AI orchestration",
+    description: "Adaptive retries and smart parallelism keep your suites fast and reliable.",
+    accent: "#7c3aed",
+    icon: "🧠"
   },
   {
-    icon: Shield,
-    title: "Reliability Guardrails",
-    description: "Detect failures early with secure scanning and safe target validation."
+    title: "Parallel execution",
+    description: "Distribute workloads across runners with autoscaling and adaptive queues.",
+    accent: "#f97316",
+    icon: "🧩"
   },
   {
-    icon: Globe,
-    title: "Cross-Environment Testing",
-    description: "Run scans on local, staging, and production URLs from one workflow."
+    title: "Universal connectors",
+    description: "Plug into CI/CD, cloud, and observability stacks without custom glue code.",
+    accent: "#00e5ff",
+    icon: "🔌"
   },
   {
-    icon: Clock3,
-    title: "Fast Triage",
-    description: "Pinpoint high-impact issues quickly with screenshots and timelines."
+    title: "Real-time observability",
+    description: "Track latency, flakiness, and failures with live diagnostics and traces.",
+    accent: "#7c3aed",
+    icon: "📡"
   },
   {
-    icon: Rocket,
-    title: "Release Confidence",
-    description: "Ship faster with measurable quality checks before every deployment."
+    title: "Enterprise security",
+    description: "SSO, SOC-ready controls, and hardened scanning baked in by default.",
+    accent: "#f97316",
+    icon: "🛡️"
   }
 ];
 
-const steps = [
+const pipelineSteps = [
   {
-    title: "Connect Your URL",
-    description: "Add your target site and choose the flows you want to validate."
+    name: "Define",
+    description: "Model suites with clear ownership.",
+    icon: "🧭"
   },
   {
-    title: "Run Smart Scans",
-    description: "AutoForge executes browser checks and collects runtime diagnostics."
+    name: "Lint",
+    description: "Enforce style and guardrails.",
+    icon: "🧪"
   },
   {
-    title: "Fix With Confidence",
-    description: "Use prioritized reports and AI guidance to resolve issues faster."
+    name: "Execute",
+    description: "Parallel runs at full speed.",
+    icon: "⚙️"
+  },
+  {
+    name: "Observe",
+    description: "Trace every signal in real time.",
+    icon: "👀"
+  },
+  {
+    name: "Ship",
+    description: "Confident releases every time.",
+    icon: "🚀"
   }
+];
+
+const integrations = [
+  "GitHub",
+  "GitLab",
+  "Jira",
+  "Linear",
+  "AWS",
+  "GCP",
+  "Azure",
+  "Vercel",
+  "Datadog",
+  "Slack",
+  "Docker",
+  "Kubernetes",
+  "Terraform",
+  "PagerDuty",
+  "Sentry",
+  "CircleCI",
+  "Buildkite",
+  "Figma"
 ];
 
 const pricing = [
   {
-    name: "Starter",
+    tier: "Free",
     price: "$0",
-    details: "Best for individual developers",
-    points: ["20 scans/month", "Basic diagnostics", "Email support"]
+    description: "Best for solo builders getting started.",
+    features: ["Community access", "1 pipeline", "Basic analytics", "Email support"]
   },
   {
-    name: "Pro",
-    price: "$49",
-    details: "For growing product teams",
-    points: ["Unlimited scans", "AI analysis", "Priority queue", "Export reports"],
+    tier: "Pro",
+    price: "$49/mo",
+    description: "For teams shipping weekly releases.",
+    features: ["Unlimited pipelines", "AI orchestration", "Priority queue", "Exportable reports"],
     featured: true
   },
   {
-    name: "Business",
-    price: "$129",
-    details: "For teams at scale",
-    points: ["Team workspaces", "Admin controls", "SLA support", "Audit history"]
-  }
-];
-
-const testimonials = [
-  {
-    avatar: "https://avatars.githubusercontent.com/u/583231?v=4",
-    name: "Ava Wilson",
-    role: "Frontend Lead",
-    feedback: "We reduced pre-release bugs significantly after adding AutoForge checks."
-  },
-  {
-    avatar: "https://avatars.githubusercontent.com/u/19864447?v=4",
-    name: "Daniel Kim",
-    role: "Engineering Manager",
-    feedback: "The reports are clean and actionable. Our QA to dev handoff is much faster."
-  },
-  {
-    avatar: "https://avatars.githubusercontent.com/u/810438?v=4",
-    name: "Mia Patel",
-    role: "Product Engineer",
-    feedback: "The UI is simple, and the AI analysis helps us prioritize what matters."
+    tier: "Enterprise",
+    price: "Custom",
+    description: "Dedicated infrastructure and compliance.",
+    features: ["SSO/SAML", "Audit trails", "Dedicated success", "Custom SLAs"]
   }
 ];
 
 export default function Home() {
-  return (
-    <div className="relative min-h-screen overflow-x-hidden surface-gradient text-slate-900 dark:text-slate-100">
-      <div className="absolute inset-0 -z-20 bg-grid opacity-30" aria-hidden="true" />
-      <div className="absolute inset-0 -z-10 surface-noise opacity-35" aria-hidden="true" />
-      <Motion.div
-        className="floating-orb -left-12 top-14 -z-10 h-56 w-56 bg-indigo-300/45 dark:bg-indigo-600/30"
-        animate={{ x: [0, 12, 0], y: [0, -12, 0] }}
-        transition={{ duration: 10, repeat: Infinity }}
-        aria-hidden="true"
-      />
-      <Motion.div
-        className="floating-orb right-[-40px] top-[38%] -z-10 h-72 w-72 bg-cyan-300/35 dark:bg-cyan-500/25"
-        animate={{ x: [0, -14, 0], y: [0, 10, 0] }}
-        transition={{ duration: 11, repeat: Infinity }}
-        aria-hidden="true"
-      />
+  const [navOpen, setNavOpen] = useState(false);
+  const [counts, setCounts] = useState(stats.map(() => 0));
+  const [activeStep, setActiveStep] = useState(0);
+  const countersStarted = useRef(false);
 
-      <Navbar />
+  useEffect(() => {
+    const revealElements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const statsSection = document.getElementById("stats");
+    if (!statsSection) return;
+
+    const animateCounter = (index, target) => {
+      const start = performance.now();
+      const duration = 1200;
+
+      const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const value = Math.floor(progress * target);
+        setCounts((prev) => {
+          const next = [...prev];
+          next[index] = value;
+          return next;
+        });
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    const counterObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !countersStarted.current) {
+            countersStarted.current = true;
+            stats.forEach((stat, index) => animateCounter(index, stat.value));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    counterObserver.observe(statsSection);
+
+    return () => counterObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % pipelineSteps.length);
+    }, 1800);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedCounts = useMemo(() =>
+    counts.map((value, index) => {
+      const stat = stats[index];
+      const formatted = new Intl.NumberFormat("en-US").format(value);
+      return `${formatted}${stat.suffix}`;
+    }),
+  [counts]);
+
+  const appUrl = process.env.NEXT_PUBLIC_FRONTEND_APP_URL || "http://localhost:5173";
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
+      <div className="grid-overlay" aria-hidden="true" />
+      <div className="orb cyan" style={{ width: 360, height: 360, top: "-120px", left: "-120px" }} />
+      <div className="orb purple" style={{ width: 420, height: 420, top: "20%", right: "-180px" }} />
+      <div className="orb blue" style={{ width: 360, height: 360, bottom: "-140px", left: "30%" }} />
+
+      <header className="nav-load sticky top-0 z-30 border-b border-[var(--border)] bg-[color:rgba(255,255,255,0.8)] backdrop-blur dark:bg-[color:rgba(6,10,16,0.8)]">
+        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-2 text-lg font-semibold">
+            <span className="bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] bg-clip-text text-transparent">⚡ AutoFlow</span>
+          </div>
+          <div className="hidden items-center gap-6 text-sm text-[var(--muted-foreground)] md:flex">
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className="transition hover:text-[var(--foreground)]">
+                {link.label}
+              </a>
+            ))}
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href={`${appUrl}/login`} className="btn-secondary rounded-full px-4 py-2 text-xs font-semibold">
+              Get started
+            </Link>
+            <button
+              type="button"
+              className="btn-secondary rounded-full px-3 py-2 text-xs font-semibold md:hidden"
+              onClick={() => setNavOpen((prev) => !prev)}
+              aria-label="Toggle navigation"
+            >
+              Menu
+            </button>
+          </div>
+        </nav>
+        {navOpen ? (
+          <div className="md:hidden">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 pb-4 text-sm text-[var(--muted-foreground)] sm:px-6">
+              {navLinks.map((link) => (
+                <a key={link.href} href={link.href} className="transition hover:text-[var(--foreground)]" onClick={() => setNavOpen(false)}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </header>
 
       <main>
-        <Hero />
-
-        <section id="features" className="px-4 py-24 sm:px-6">
-          <div className="mx-auto w-full max-w-6xl space-y-10 rounded-2xl p-6 section-panel sm:p-8">
-            <header className="space-y-3 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">Features</p>
-              <h2 className="text-3xl font-semibold sm:text-4xl">Everything you need for reliable releases</h2>
-            </header>
-
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {features.map((feature) => (
-                <Card
-                  key={feature.title}
-                  className="rounded-xl border-slate-200 bg-white/95 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/90"
-                >
-                  <feature.icon className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
-                  <h3 className="mt-4 text-base font-semibold text-slate-900 dark:text-slate-100">{feature.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{feature.description}</p>
-                </Card>
-              ))}
+        <section className="mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
+          <div className="stagger flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1 text-xs text-[var(--muted-foreground)]" style={{ animationDelay: "0.1s" }}>
+            <span className="badge-dot" />
+            v3.0 — Now with AI-powered pipelines
+          </div>
+          <h1 className="stagger mt-6 text-4xl font-extrabold sm:text-6xl" style={{ animationDelay: "0.2s" }}>
+            Automate Everything.
+            <span className="block bg-gradient-to-r from-[#00e5ff] via-[#7c3aed] to-[#f97316] bg-clip-text text-transparent">
+              Ship Faster.
+            </span>
+          </h1>
+          <p className="stagger mt-4 max-w-2xl text-base text-[var(--muted-foreground)] sm:text-lg" style={{ animationDelay: "0.3s" }}>
+            AutoFlow brings orchestration, observability, and security to every automation framework so your team ships confidently at scale.
+          </p>
+          <div className="stagger mt-8 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: "0.4s" }}>
+            <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">
+              Start free
+            </Link>
+            <Link href="#showcase" className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
+              View demo
+            </Link>
+          </div>
+          <div className="stagger mt-12 w-full max-w-4xl rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.5)]" style={{ animationDelay: "0.5s" }}>
+            <div className="rounded-2xl border border-[rgba(0,229,255,0.12)] bg-[var(--surface-2)] p-4">
+              <Image
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80"
+                alt="AutoFlow dashboard preview"
+                width={1600}
+                height={900}
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="h-auto w-full rounded-xl object-cover"
+                priority
+              />
             </div>
           </div>
         </section>
 
-        <section id="how" className="px-4 py-24 sm:px-6">
-          <div className="mx-auto w-full max-w-6xl space-y-10">
-            <header className="space-y-3 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">How It Works</p>
-              <h2 className="text-3xl font-semibold sm:text-4xl">Simple flow, clear outcomes</h2>
-            </header>
-
-            <ol className="grid gap-5 md:grid-cols-3">
-              {steps.map((step, index) => (
-                <li key={step.title} className="relative rounded-xl border border-slate-200 bg-white/95 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
-                  <div className="mb-5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
-                    {index + 1}
-                  </div>
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">{step.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{step.description}</p>
-                  {index < steps.length - 1 ? (
-                    <span className="absolute right-[-10px] top-10 hidden h-px w-5 bg-indigo-300 md:block dark:bg-indigo-700" />
-                  ) : null}
-                </li>
-              ))}
-            </ol>
+        <section id="stats" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+          <div className="glass-card reveal grid gap-4 rounded-2xl px-6 py-6 text-center sm:grid-cols-4">
+            {stats.map((stat, index) => (
+              <div key={stat.label} className="flex flex-col gap-2">
+                <p className="text-2xl font-semibold text-white">{formattedCounts[index]}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--dim-foreground)]">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </section>
 
-        <section id="about" className="px-4 py-24 sm:px-6">
-          <div className="mx-auto grid w-full max-w-6xl gap-8 rounded-2xl p-6 section-panel lg:grid-cols-[1fr_1.1fr] lg:items-center sm:p-8">
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <section id="features" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+          <div className="reveal text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Features</p>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Everything your QA org needs</h2>
+            <p className="mt-3 text-sm text-[var(--muted-foreground)]">From setup to rollout, AutoFlow handles the full pipeline with enterprise-grade controls.</p>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="glass-card reveal group relative overflow-hidden rounded-2xl p-6"
+                style={{ transitionDelay: `${index * 90}ms` }}
+              >
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-[rgba(0,229,255,0.08)] to-[rgba(124,58,237,0.12)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="icon-tile mb-4 flex h-12 w-12 items-center justify-center rounded-2xl" style={{ color: feature.accent }}>
+                  <span className="text-xl">{feature.icon}</span>
+                </div>
+                <h3 className="text-lg font-semibold text-[var(--foreground)]">{feature.title}</h3>
+                <p className="mt-2 text-sm text-[var(--muted-foreground)]">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="showcase" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+          <div className="reveal grid gap-10 lg:grid-cols-[1.1fr,1fr]">
+            <div className="space-y-4">
+              <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Code Showcase</p>
+              <h2 className="text-3xl font-semibold sm:text-4xl">A pipeline your team can read</h2>
+              <p className="text-sm text-[var(--muted-foreground)]">
+                Define flows in a single config. AutoFlow handles orchestration, retries, and observability automatically.
+              </p>
+              <div className="glass-card mt-6 w-full max-w-[360px] overflow-hidden rounded-2xl border border-[var(--border)] sm:max-w-[420px] lg:ml-auto">
+                <Image
+                  src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=80"
+                  alt="Team reviewing pipeline diagnostics"
+                  width={1400}
+                  height={900}
+                  sizes="(max-width: 1024px) 100vw, 520px"
+                  className="h-auto w-full object-cover opacity-55"
+                />
+              </div>
+              <Link href={`${appUrl}/register`} className="btn-primary inline-flex rounded-full px-6 py-3 text-sm font-semibold">
+                Get the SDK
+              </Link>
+              <div className="glass-card mt-6 overflow-hidden rounded-2xl border border-[var(--border)]">
+                <Image
+                  src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80"
+                  alt="Automation workflow overview"
+                  width={1400}
+                  height={900}
+                  sizes="(max-width: 1024px) 100vw, 520px"
+                  className="h-auto w-full object-cover opacity-60"
+                />
+              </div>
+            </div>
+            <div className="code-card reveal rounded-2xl p-6">
+              <div className="flex items-center justify-between text-xs text-[var(--dim-foreground)]">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#f97316]" />
+                  <span className="h-2 w-2 rounded-full bg-[#facc15]" />
+                  <span className="h-2 w-2 rounded-full bg-[#22c55e]" />
+                </div>
+                <span>pipeline.ts</span>
+              </div>
+              <pre className="mt-6 whitespace-pre-wrap text-xs leading-6 text-[var(--muted-foreground)]">
+                <code>
+                  <span style={{ color: "#00e5ff" }}>import</span> <span style={{ color: "#e8f4fd" }}>{"{"} pipeline, stage {"}"}</span> <span style={{ color: "#00e5ff" }}>from</span> <span style={{ color: "#7c3aed" }}>"@autoflow/core"</span>;
+                  {"\n\n"}
+                  <span style={{ color: "#00e5ff" }}>export</span> <span style={{ color: "#e8f4fd" }}>const</span> <span style={{ color: "#f97316" }}>releaseFlow</span> = pipeline({"("}
+                  {"\n  name: "}<span style={{ color: "#7c3aed" }}>"checkout-release"</span>,
+                  {"\n  triggers: ["}<span style={{ color: "#7c3aed" }}>"push"</span>{"],"}
+                  {"\n  stages: ["}
+                  {"\n    stage("}<span style={{ color: "#7c3aed" }}>"lint"</span>{", { runner: "}<span style={{ color: "#7c3aed" }}>"node"</span>{" })"}
+                  {"\n    stage("}<span style={{ color: "#7c3aed" }}>"e2e"</span>{", { parallelism: 12 })"}
+                  {"\n    stage("}<span style={{ color: "#7c3aed" }}>"report"</span>{", { notify: true })"}
+                  {"\n  ]"}
+                  {"\n});"}
+                </code>
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section id="pipeline" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+          <div className="reveal text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Pipeline Visualizer</p>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">A release flow that never stalls</h2>
+          </div>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            {pipelineSteps.map((step, index) => (
+              <div key={step.name} className="flex items-center gap-4">
+                <div className={`step-card glass-card w-[200px] rounded-2xl p-4 text-left ${activeStep === index ? "active" : ""}`}>
+                  <p className="text-2xl">{step.icon}</p>
+                  <p className="mt-3 text-sm font-semibold text-[var(--foreground)]">{step.name}</p>
+                  <p className="mt-1 text-xs text-[var(--muted-foreground)]">{step.description}</p>
+                </div>
+                {index < pipelineSteps.length - 1 ? (
+                  <span className="hidden text-2xl text-[var(--dim-foreground)] md:inline">➜</span>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="integrations" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+          <div className="reveal text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Integrations</p>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Connect to everything you already use</h2>
+          </div>
+          <div className="reveal glass-card mx-auto mt-8 max-w-5xl overflow-hidden rounded-3xl border border-[var(--border)]">
+            <Image
+              src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=1600&q=80"
+              alt="Integrations wall"
+              width={1600}
+              height={900}
+              sizes="(max-width: 1024px) 100vw, 1040px"
+              className="h-auto w-full object-cover opacity-45"
+            />
+          </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {integrations.map((item) => (
+              <span key={item} className="integration-pill rounded-full px-4 py-2 text-xs font-semibold">
+                {item}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section id="pricing" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+          <div className="reveal text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Pricing</p>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Plans that scale with your team</h2>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {pricing.map((plan) => (
+              <div key={plan.tier} className={`pricing-card glass-card reveal rounded-2xl p-6 ${plan.featured ? "featured" : ""}`}>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold text-[var(--foreground)]">{plan.tier}</p>
+                  {plan.featured ? (
+                    <span className="rounded-full bg-[rgba(0,229,255,0.15)] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#00e5ff]">Most popular</span>
+                  ) : null}
+                </div>
+                <p className="mt-4 text-3xl font-semibold text-[var(--foreground)]">{plan.price}</p>
+                <p className="mt-2 text-sm text-[var(--muted-foreground)]">{plan.description}</p>
+                <ul className="mt-4 space-y-2 text-sm text-[var(--muted-foreground)]">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <span className="text-[#00e5ff]">✔</span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`${appUrl}/register`} className="btn-secondary mt-6 inline-flex w-full justify-center rounded-full px-4 py-2 text-xs font-semibold">
+                  Choose plan
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
+          <div className="reveal glass-card relative overflow-hidden rounded-3xl px-8 py-12 text-center">
+            <div className="absolute inset-0 opacity-20">
               <Image
-                src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=80"
-                alt="Team reviewing analytics dashboard"
-                width={900}
-                height={620}
+                src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=80"
+                alt="Glowing server racks"
+                width={1600}
+                height={900}
+                sizes="(max-width: 1024px) 100vw, 1040px"
                 className="h-full w-full object-cover"
               />
             </div>
-
-            <div className="space-y-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">About</p>
-              <h2 className="text-3xl font-semibold sm:text-4xl">Built to help teams improve quality without slowing delivery</h2>
-              <p className="text-sm text-slate-600 sm:text-base dark:text-slate-300">
-                AutoForge combines browser automation, diagnostics, and AI analysis to give engineering teams a dependable quality workflow.
-              </p>
-              <ul className="space-y-3">
-                {[
-                  "Faster issue detection across key user journeys",
-                  "Clear, shareable reports for QA and engineering",
-                  "Consistent release checks with better visibility"
-                ].map((point) => (
-                  <li key={point} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-cyan-500" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="testimonials" className="px-4 py-24 sm:px-6">
-          <div className="mx-auto w-full max-w-6xl space-y-10">
-            <header className="space-y-3 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">Testimonials</p>
-              <h2 className="text-3xl font-semibold sm:text-4xl">Loved by modern product teams</h2>
-            </header>
-
-            <div className="grid gap-5 md:grid-cols-3">
-              {testimonials.map((item) => (
-                <Card key={item.name} className="rounded-xl border-slate-200 bg-white/95 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
-                  <div className="flex items-center gap-3">
-                    <Image src={item.avatar} alt={item.name} width={44} height={44} className="h-11 w-11 rounded-full object-cover" />
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.name}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{item.role}</p>
-                    </div>
-                  </div>
-                  <MessageSquareQuote className="mt-4 h-4 w-4 text-indigo-500" />
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{item.feedback}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="pricing" className="px-4 py-24 sm:px-6">
-          <div className="mx-auto w-full max-w-6xl space-y-10 rounded-2xl p-6 section-panel sm:p-8">
-            <header className="space-y-3 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">Pricing</p>
-              <h2 className="text-3xl font-semibold sm:text-4xl">Simple plans that scale with your team</h2>
-            </header>
-
-            <div className="grid gap-5 lg:grid-cols-3">
-              {pricing.map((plan) => (
-                <Card
-                  key={plan.name}
-                  className={`rounded-xl border p-6 shadow-sm ${
-                    plan.featured
-                      ? "border-indigo-400 bg-indigo-600 text-white shadow-indigo-300/50 dark:border-indigo-500 dark:bg-indigo-600"
-                      : "border-slate-200 bg-white/95 dark:border-slate-800 dark:bg-slate-900/90"
-                  }`}
-                >
-                  {plan.featured ? (
-                    <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-semibold">Recommended</span>
-                  ) : null}
-                  <h3 className={`mt-3 text-lg font-semibold ${plan.featured ? "text-white" : "text-slate-900 dark:text-slate-100"}`}>{plan.name}</h3>
-                  <p className={`mt-2 text-3xl font-bold ${plan.featured ? "text-white" : "text-slate-900 dark:text-slate-100"}`}>
-                    {plan.price}
-                    <span className={`text-sm font-medium ${plan.featured ? "text-indigo-100" : "text-slate-500 dark:text-slate-400"}`}>/mo</span>
-                  </p>
-                  <p className={`mt-2 text-sm ${plan.featured ? "text-indigo-100" : "text-slate-600 dark:text-slate-300"}`}>{plan.details}</p>
-
-                  <ul className="mt-5 space-y-2">
-                    {plan.points.map((point) => (
-                      <li key={point} className={`flex items-start gap-2 text-sm ${plan.featured ? "text-indigo-50" : "text-slate-700 dark:text-slate-200"}`}>
-                        <CircleDot className="mt-0.5 h-4 w-4" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button className="mt-6 w-full" variant={plan.featured ? "secondary" : "default"}>
-                    Choose {plan.name}
-                  </Button>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-4 pb-24 pt-8 sm:px-6">
-          <div className="mx-auto w-full max-w-6xl rounded-2xl bg-gradient-to-r from-indigo-600 to-cyan-600 p-10 text-center text-white shadow-xl shadow-indigo-300/40 dark:shadow-indigo-950/50">
-            <Sparkles className="mx-auto h-6 w-6 text-cyan-100" />
-            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Ready to improve release quality?</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-indigo-50">
-              Start scanning your application today and give your team a faster, more reliable QA workflow.
+            <div className="relative">
+            <h2 className="text-3xl font-semibold sm:text-4xl">
+              <span className="bg-gradient-to-r from-[#00e5ff] via-[#7c3aed] to-[#f97316] bg-clip-text text-transparent">
+                Ready to automate?
+              </span>
+            </h2>
+            <p className="mt-3 text-sm text-[var(--muted-foreground)]">
+              Start free today and ship faster with a pipeline your team trusts.
             </p>
-            <Button className="mt-6 bg-white text-indigo-700 hover:bg-indigo-50">Start Free Trial</Button>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">Start free</Link>
+              <Link href="#showcase" className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">See it in action</Link>
+            </div>
+            </div>
           </div>
         </section>
       </main>
 
-      <Footer />
+      <footer className="border-t border-[var(--border)] py-6">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 text-xs text-[var(--dim-foreground)] sm:flex-row sm:px-6">
+          <span className="font-semibold text-[var(--muted-foreground)]">⚡ AutoFlow</span>
+          <span>© 2026 AutoFlow. All rights reserved.</span>
+          <div className="flex items-center gap-4">
+            <Link href="#" className="hover:text-[var(--foreground)]">Privacy</Link>
+            <Link href="#" className="hover:text-[var(--foreground)]">Terms</Link>
+            <Link href="#" className="hover:text-[var(--foreground)]">Status</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

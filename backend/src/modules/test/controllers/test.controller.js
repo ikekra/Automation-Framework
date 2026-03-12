@@ -1,28 +1,13 @@
 import { TestReport } from "../models/test-report.model.js";
+import { TestJob } from "../models/test-job.model.js";
 import { analyzeWebApp } from "../services/test-analyzer.service.js";
-import { computeReportSeveritySummary } from "../services/severity.service.js";
-import { analyzeReportWithAI } from "../services/test-ai-analysis.service.js";
+import { buildAndStoreReport } from "../services/test-report.service.js";
+import { enqueueAnalyzeJob } from "../services/test-queue.service.js";
 
 export const analyzeWebAppController = async (req, res) => {
   const { url } = req.body;
   const analyzed = await analyzeWebApp(url);
-  const severitySummary = computeReportSeveritySummary(analyzed);
-  const aiAnalysis = await analyzeReportWithAI({
-    ...analyzed,
-    severitySummary
-  });
-
-  const report = await TestReport.create({
-    userId: req.auth.userId,
-    url: analyzed.url,
-    consoleErrors: analyzed.consoleErrors,
-    networkErrors: analyzed.networkErrors,
-    jsExceptions: analyzed.jsExceptions,
-    performanceMetrics: analyzed.performanceMetrics,
-    screenshotUrl: analyzed.screenshotUrl,
-    severitySummary,
-    aiAnalysis
-  });
+  const report = await buildAndStoreReport({ userId: req.auth.userId, analyzed });
 
   res.status(200).json({
     success: true,
@@ -38,6 +23,34 @@ export const analyzeWebAppController = async (req, res) => {
       aiAnalysis: report.aiAnalysis,
       createdAt: report.createdAt
     }
+  });
+};
+
+export const analyzeWebAppAsyncController = async (req, res) => {
+  const { url } = req.body;
+  const job = await enqueueAnalyzeJob({ userId: req.auth.userId, url });
+
+  res.status(202).json({
+    success: true,
+    data: {
+      jobId: job._id,
+      status: job.status,
+      createdAt: job.createdAt
+    }
+  });
+};
+
+export const getTestJobController = async (req, res) => {
+  const { jobId } = req.params;
+  const job = await TestJob.findOne({ _id: jobId, userId: req.auth.userId }).lean();
+
+  if (!job) {
+    return res.status(404).json({ success: false, message: "Job not found" });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: job
   });
 };
 

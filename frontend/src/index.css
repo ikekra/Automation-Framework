@@ -63,7 +63,9 @@ h3,
 }
 
 *:where(button, a, input, select, textarea, .glass-card) {
-  transition: all var(--duration-fast) ease;
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: ease;
 }
 
 a {

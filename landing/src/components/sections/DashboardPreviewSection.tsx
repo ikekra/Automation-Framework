@@ -66,13 +66,13 @@ const useCounter = (target: number) => {
 const statusStyles: Record<string, string> = {
   Critical: "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-300",
   Warning: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-300",
-  Resolved: "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-300"
+  Resolved: "border-teal-200 bg-teal-50 text-teal-800 dark:border-teal-900 dark:bg-teal-950/30 dark:text-teal-300"
 };
 
 const statusPulse: Record<string, string> = {
   Critical: "bg-rose-500",
   Warning: "bg-amber-500",
-  Resolved: "bg-emerald-500"
+  Resolved: "bg-teal-500"
 };
 
 export const DashboardPreviewSection = () => {
@@ -93,7 +93,7 @@ export const DashboardPreviewSection = () => {
     <AnimatedSection id="dashboard-preview" className="px-4 py-24 sm:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-8">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.2em] text-blue-600 dark:text-blue-300">Dashboard Preview</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-[#1f3b73] dark:text-[#7bc6ff]">Dashboard Preview</p>
           <h2 className="text-3xl font-semibold text-slate-900 sm:text-4xl dark:text-slate-100">Operational visibility built for engineering teams</h2>
           <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
             A realistic control center showing active checks, issue triage, and performance trends for production web applications.
@@ -112,7 +112,11 @@ export const DashboardPreviewSection = () => {
               <p className="mb-6 text-sm font-semibold text-slate-900 dark:text-slate-100">AutoForge Console</p>
               <nav aria-label="Dashboard navigation" className="space-y-1">
                 {navItems.map((item) => (
-                  <button key={item.label} type="button" className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100">
+                  <button
+                    key={item.label}
+                    type="button"
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-slate-600 hover:bg-[#edf2fb] hover:text-[#1f3b73] dark:text-slate-300 dark:hover:bg-[#16233a] dark:hover:text-[#7bc6ff]"
+                  >
                     <item.icon className="h-4 w-4" />
                     <span>{item.label}</span>
                   </button>
@@ -126,7 +130,7 @@ export const DashboardPreviewSection = () => {
                   <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Production Health</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">Updated just now</p>
                 </div>
-                <Badge className="border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-300">Live Environment</Badge>
+                <Badge className="border-[#b7c8e8] bg-[#edf2fb] text-[#1f3b73] dark:border-[#2b5cb8] dark:bg-[#16233a] dark:text-[#7bc6ff]">Live Environment</Badge>
               </header>
 
               <main className="grid flex-1 grid-cols-1 gap-5 p-5 xl:grid-cols-[1.2fr_1fr]">
@@ -181,7 +185,7 @@ export const DashboardPreviewSection = () => {
 
                 <Card className="p-5">
                   <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
-                    <BarChart3 className="h-4 w-4 text-blue-600 dark:text-blue-300" />
+                    <BarChart3 className="h-4 w-4 text-[#1f3b73] dark:text-[#7bc6ff]" />
                     Performance Trend
                   </div>
                   <div className="h-[320px] w-full">

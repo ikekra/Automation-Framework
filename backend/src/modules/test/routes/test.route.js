@@ -4,7 +4,7 @@ import { authenticate } from "../../../middleware/auth.js";
 import { testAnalyzeRateLimiter } from "../../../middleware/rateLimiter.js";
 import { validate } from "../../../middleware/validate.js";
 import { asyncHandler } from "../../../utils/asyncHandler.js";
-import { analyzeWebAppController, listTestReportsController } from "../controllers/test.controller.js";
+import { analyzeWebAppAsyncController, analyzeWebAppController, getTestJobController, listTestReportsController } from "../controllers/test.controller.js";
 import { analyzeWebAppSchema, listReportsQuerySchema } from "../schemas/test.schema.js";
 
 const router = Router();
@@ -20,6 +20,8 @@ router.use(
 
 router.use(authenticate);
 router.post("/analyze", testAnalyzeRateLimiter, validate(analyzeWebAppSchema), asyncHandler(analyzeWebAppController));
+router.post("/analyze-async", testAnalyzeRateLimiter, validate(analyzeWebAppSchema), asyncHandler(analyzeWebAppAsyncController));
+router.get("/jobs/:jobId", asyncHandler(getTestJobController));
 router.get("/reports", validate(listReportsQuerySchema, "query"), asyncHandler(listTestReportsController));
 
 export default router;

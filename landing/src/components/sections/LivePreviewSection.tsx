@@ -47,10 +47,10 @@ export const LivePreviewSection = () => {
   );
 
   return (
-    <AnimatedSection className="px-4 py-24 sm:px-6">
+    <AnimatedSection id="preview" className="px-4 py-24 sm:px-6">
       <div className="mx-auto w-full max-w-6xl space-y-10">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">Live Preview</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-[#1f3b73] dark:text-[#7bc6ff]">Live Preview</p>
           <h2 className="text-3xl font-semibold text-slate-900 sm:text-4xl dark:text-slate-100">Structured Report Interface</h2>
         </header>
 
@@ -67,6 +67,7 @@ export const LivePreviewSection = () => {
               alt="Bug report screenshot preview"
               width={1000}
               height={620}
+              sizes="(max-width: 1024px) 100vw, 720px"
               className="h-auto w-full rounded-lg border border-slate-200 object-cover dark:border-slate-800"
               loading="lazy"
             />
@@ -78,7 +79,7 @@ export const LivePreviewSection = () => {
               <ul className="mt-3 space-y-2 text-sm text-slate-700 dark:text-slate-300">
                 <li className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-rose-800 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200">Unhandled promise rejection on checkout flow</li>
                 <li className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">Slow API response on /pricing endpoint</li>
-                <li className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">Console warning from deprecated package</li>
+                <li className="rounded-md border border-[#b7c8e8] bg-[#edf2fb] px-3 py-2 text-[#1f3b73] dark:border-[#2b5cb8] dark:bg-[#16233a] dark:text-[#7bc6ff]">Console warning from deprecated package</li>
               </ul>
             </Card>
 

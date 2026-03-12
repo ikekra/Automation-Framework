@@ -2,6 +2,7 @@ import { AlertTriangle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { GitHubSignInButton } from "@/components/auth/GitHubSignInButton";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 const errorMessages: Record<string, string> = {
   AccessDenied: "Access denied. Please try again or use a different account.",
@@ -30,7 +31,7 @@ export default async function SignInPage({
           <Card className="p-6">
             <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Sign in to AutoForge AI</h1>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              Continue securely with your GitHub account.
+              Choose a provider to continue securely.
             </p>
 
             {errorText ? (
@@ -40,11 +41,18 @@ export default async function SignInPage({
               </div>
             ) : null}
 
-            <GitHubSignInButton
-              className="mt-6 w-full"
-              callbackUrl={params.callbackUrl || "/dashboard"}
-              label="Continue with GitHub"
-            />
+            <div className="mt-6 space-y-3">
+              <GoogleSignInButton
+                className="w-full"
+                callbackUrl={params.callbackUrl || "/dashboard"}
+                label="Continue with Google"
+              />
+              <GitHubSignInButton
+                className="w-full"
+                callbackUrl={params.callbackUrl || "/dashboard"}
+                label="Continue with GitHub"
+              />
+            </div>
           </Card>
         </div>
       </main>

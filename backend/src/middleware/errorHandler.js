@@ -1,6 +1,6 @@
 ﻿import logger from "../config/logger.js";
 
-export const errorHandler = (err, _req, res, _next) => {
+export const errorHandler = (err, req, res, _next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || "Internal Server Error";
 
@@ -10,14 +10,15 @@ export const errorHandler = (err, _req, res, _next) => {
   }
 
   if (statusCode >= 500) {
-    logger.error(err.message, { stack: err.stack });
+    logger.error(err.message, { stack: err.stack, requestId: req.requestId });
   } else {
-    logger.warn(err.message);
+    logger.warn(err.message, { requestId: req.requestId });
   }
 
   res.status(statusCode).json({
     success: false,
     message,
+    requestId: req.requestId,
     ...(err.details ? { details: err.details } : {})
   });
 };

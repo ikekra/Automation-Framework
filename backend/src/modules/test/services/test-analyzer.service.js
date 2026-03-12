@@ -10,6 +10,34 @@ const ensureStorageDir = async () => {
   return storageDir;
 };
 
+const pruneReportAssets = async (storageDir) => {
+  const ttlMs = Math.max(1, env.testReportTtlHours) * 60 * 60 * 1000;
+  const cutoff = Date.now() - ttlMs;
+
+  let entries;
+  try {
+    entries = await fs.readdir(storageDir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+
+  await Promise.all(
+    entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".png"))
+      .map(async (entry) => {
+        const filePath = path.join(storageDir, entry.name);
+        try {
+          const stats = await fs.stat(filePath);
+          if (stats.mtimeMs < cutoff) {
+            await fs.unlink(filePath);
+          }
+        } catch {
+          return;
+        }
+      })
+  );
+};
+
 const collectPerformanceMetrics = async (page) => {
   return page.evaluate(() => {
     const nav = performance.getEntriesByType("navigation")[0];
@@ -140,14 +168,30 @@ export const analyzeWebApp = async (inputUrl) => {
       }
     });
 
-    try {
-      await page.goto(targetUrl, { timeout: timeoutMs, waitUntil: "networkidle" });
-    } catch (error) {
-      throw new AppError(`Analysis timeout or navigation failure: ${error.message}`, 408);
+    const maxAttempts = Math.max(1, env.testAnalyzeRetries + 1);
+    let lastError;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      try {
+        await page.goto(targetUrl, { timeout: timeoutMs, waitUntil: "networkidle" });
+        lastError = null;
+        break;
+      } catch (error) {
+        lastError = error;
+        if (attempt < maxAttempts) {
+          await page.waitForTimeout(env.testAnalyzeRetryDelayMs);
+          continue;
+        }
+      }
+    }
+
+    if (lastError) {
+      throw new AppError(`Analysis timeout or navigation failure: ${lastError.message}`, 408);
     }
 
     const performanceMetrics = await collectPerformanceMetrics(page);
     const storageDir = await ensureStorageDir();
+    await pruneReportAssets(storageDir);
     const screenshotFileName = `report-${Date.now()}-${Math.random().toString(16).slice(2)}.png`;
     const screenshotPath = path.join(storageDir, screenshotFileName);
 

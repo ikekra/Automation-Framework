@@ -4,7 +4,8 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const links = [
   { href: "#home", label: "Home" },
@@ -13,6 +14,8 @@ const links = [
   { href: "#pricing", label: "Pricing" },
   { href: "#contact", label: "Contact" }
 ];
+
+const appUrl = process.env.NEXT_PUBLIC_FRONTEND_APP_URL || "http://localhost:5173";
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -26,14 +29,16 @@ export const Navbar = () => {
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm font-medium text-slate-600 transition-colors hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300">
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-slate-600 transition-colors hover:text-[#1f3b73] dark:text-slate-300 dark:hover:text-[#7bc6ff]">
               {link.label}
             </Link>
           ))}
         </nav>
 
         <div className="hidden md:block">
-          <Button size="sm">Get Started</Button>
+          <Link href={`${appUrl}/register`} className={cn(buttonVariants({ size: "sm" }), "shadow-sm")}>
+            Get Started
+          </Link>
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
@@ -68,7 +73,9 @@ export const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              <Button className="mt-2 w-full" size="sm">Get Started</Button>
+              <Link href={`${appUrl}/register`} className={cn(buttonVariants({ size: "sm" }), "mt-2 w-full")}>
+                Get Started
+              </Link>
             </div>
           </Motion.div>
         ) : null}

@@ -64,7 +64,7 @@ const fakeResult = {
 const statusStyles: Record<string, string> = {
   Critical: "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-300",
   Warning: "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-300",
-  Issue: "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-300"
+  Issue: "border-[#b7c8e8] bg-[#edf2fb] text-[#1f3b73] dark:border-[#2b5cb8] dark:bg-[#16233a] dark:text-[#7bc6ff]"
 };
 
 export const DemoExperience = () => {
@@ -113,7 +113,7 @@ export const DemoExperience = () => {
           <input
             value={state.url}
             onChange={(event) => dispatch({ type: "setUrl", payload: event.target.value })}
-            className="h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none ring-blue-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            className="h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none ring-[#1f3b73] focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             placeholder="example.com"
             aria-label="Demo URL"
             disabled={state.phase === "scanning"}
@@ -147,7 +147,7 @@ export const DemoExperience = () => {
                 </div>
                 <div className="h-2 w-full overflow-hidden rounded bg-slate-200 dark:bg-slate-800">
                   <Motion.div
-                    className="h-full bg-blue-600"
+                    className="h-full bg-[#1f3b73]"
                     animate={{ width: `${state.progress}%` }}
                     transition={{ duration: 0.25 }}
                   />
@@ -186,7 +186,7 @@ export const DemoExperience = () => {
                 </div>
                 <div className="rounded-md border border-slate-200 p-4 dark:border-slate-800">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Accessibility Issues</p>
-                  <p className="mt-2 text-2xl font-semibold text-blue-600 dark:text-blue-300">{fakeResult.summary.accessibilityIssues}</p>
+                  <p className="mt-2 text-2xl font-semibold text-[#1f3b73] dark:text-[#7bc6ff]">{fakeResult.summary.accessibilityIssues}</p>
                 </div>
               </div>
 
@@ -211,7 +211,7 @@ export const DemoExperience = () => {
 
                       <span className={`inline-flex w-fit items-center gap-2 rounded-md border px-2 py-1 text-xs font-semibold ${statusStyles[item.severity]}`}>
                         <Motion.span
-                          className={`h-1.5 w-1.5 rounded-full ${item.severity === "Critical" ? "bg-rose-500" : item.severity === "Warning" ? "bg-amber-500" : "bg-blue-500"}`}
+                          className={`h-1.5 w-1.5 rounded-full ${item.severity === "Critical" ? "bg-rose-500" : item.severity === "Warning" ? "bg-amber-500" : "bg-teal-500"}`}
                           animate={{ opacity: [0.45, 1, 0.45] }}
                           transition={{ duration: 1.3, repeat: Infinity }}
                         />
@@ -229,7 +229,7 @@ export const DemoExperience = () => {
               key="idle"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200"
+              className="mt-6 rounded-md border border-[#b7c8e8] bg-[#edf2fb] px-4 py-3 text-sm text-[#1f3b73] dark:border-[#2b5cb8] dark:bg-[#16233a] dark:text-[#7bc6ff]"
             >
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />

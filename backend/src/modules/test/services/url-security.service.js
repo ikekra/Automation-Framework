@@ -11,6 +11,8 @@ const blockedHostnames = new Set([
   "[::1]"
 ]);
 
+const blockedSuffixes = [".local", ".localhost"];
+
 const isPrivateIpv4 = (ip) => {
   const octets = ip.split(".").map(Number);
   if (octets.length !== 4 || octets.some((part) => Number.isNaN(part))) {
@@ -44,11 +46,19 @@ export const isPrivateIp = (ip) => {
 
 export const isBlockedHostname = (hostname) => {
   const lower = hostname.toLowerCase();
-  return blockedHostnames.has(lower) || lower.endsWith(".local");
+  return blockedHostnames.has(lower) || blockedSuffixes.some((suffix) => lower.endsWith(suffix));
 };
 
 const resolveAndValidateHostname = async (hostname, lookup = dns.lookup) => {
   try {
+    if (net.isIP(hostname)) {
+      if (isPrivateIp(hostname)) {
+        throw new AppError("Target URL resolves to a private or blocked address", 400);
+      }
+
+      return;
+    }
+
     const addresses = await lookup(hostname, { all: true, verbatim: true });
     if (!addresses.length) {
       throw new AppError("Hostname could not be resolved", 400);
@@ -79,6 +89,10 @@ export const parseAndValidateTargetUrl = async (inputUrl, lookup = dns.lookup) =
     throw new AppError("Only http/https URLs are allowed", 400);
   }
 
+  if (parsed.username || parsed.password) {
+    throw new AppError("Credentialed URLs are not allowed", 400);
+  }
+
   const hostname = parsed.hostname.toLowerCase();
   if (isBlockedHostname(hostname)) {
     throw new AppError("Localhost/private targets are blocked", 400);
@@ -92,6 +106,10 @@ export const assertUrlIsSafe = async (resourceUrl, lookup = dns.lookup) => {
   const parsed = new URL(resourceUrl);
   if (!["http:", "https:"].includes(parsed.protocol)) {
     throw new Error("Blocked protocol");
+  }
+
+  if (parsed.username || parsed.password) {
+    throw new Error("Blocked credentials");
   }
 
   const hostname = parsed.hostname.toLowerCase();

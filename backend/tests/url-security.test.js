@@ -16,6 +16,7 @@ test("isPrivateIp detects local/private ranges", () => {
 test("isBlockedHostname blocks localhost-style domains", () => {
   assert.equal(isBlockedHostname("localhost"), true);
   assert.equal(isBlockedHostname("dev.local"), true);
+  assert.equal(isBlockedHostname("api.localhost"), true);
   assert.equal(isBlockedHostname("example.com"), false);
 });
 
@@ -29,6 +30,20 @@ test("parseAndValidateTargetUrl rejects non-http protocols", async () => {
 test("parseAndValidateTargetUrl rejects private resolution (SSRF)", async () => {
   await assert.rejects(
     () => parseAndValidateTargetUrl("https://example.com", privateLookup),
+    (error) => error instanceof AppError && error.statusCode === 400
+  );
+});
+
+test("parseAndValidateTargetUrl rejects credentialed URLs", async () => {
+  await assert.rejects(
+    () => parseAndValidateTargetUrl("https://user:pass@example.com", publicLookup),
+    (error) => error instanceof AppError && error.statusCode === 400
+  );
+});
+
+test("parseAndValidateTargetUrl rejects IPv6 localhost", async () => {
+  await assert.rejects(
+    () => parseAndValidateTargetUrl("http://[::1]/", publicLookup),
     (error) => error instanceof AppError && error.statusCode === 400
   );
 });
@@ -54,5 +69,12 @@ test("assertUrlIsSafe blocks non-http URLs", async () => {
   await assert.rejects(
     () => assertUrlIsSafe("ftp://cdn.example.com/app.js", publicLookup),
     /invalid|protocol/i
+  );
+});
+
+test("assertUrlIsSafe blocks credentialed URLs", async () => {
+  await assert.rejects(
+    () => assertUrlIsSafe("https://user:pass@cdn.example.com/app.js", publicLookup),
+    /credential|blocked/i
   );
 });

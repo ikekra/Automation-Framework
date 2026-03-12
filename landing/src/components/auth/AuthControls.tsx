@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { GitHubSignInButton } from "@/components/auth/GitHubSignInButton";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 
 export const AuthControls = () => {
@@ -14,7 +15,12 @@ export const AuthControls = () => {
   }
 
   if (!session?.user) {
-    return <GitHubSignInButton className="h-9" callbackUrl="/dashboard" />;
+    return (
+      <div className="flex items-center gap-2">
+        <GoogleSignInButton className="h-9" callbackUrl="/dashboard" label="Google" />
+        <GitHubSignInButton className="h-9" callbackUrl="/dashboard" label="GitHub" />
+      </div>
+    );
   }
 
   return (

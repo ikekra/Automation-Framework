@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
 const getEnv = (key: string, fallbackKey?: string) => {
   const direct = process.env[key]?.trim();
@@ -38,6 +39,10 @@ export const authOptions: NextAuthOptions = {
     GitHub({
       clientId: getEnv("AUTH_GITHUB_ID", "GITHUB_ID"),
       clientSecret: getEnv("AUTH_GITHUB_SECRET", "GITHUB_SECRET")
+    }),
+    Google({
+      clientId: getEnv("AUTH_GOOGLE_ID", "GOOGLE_ID"),
+      clientSecret: getEnv("AUTH_GOOGLE_SECRET", "GOOGLE_SECRET")
     })
   ],
   session: {
