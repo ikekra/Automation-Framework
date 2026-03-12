@@ -404,7 +404,7 @@ export default function Home() {
                   <p className="mt-1 text-xs text-[var(--muted-foreground)]">{step.description}</p>
                 </div>
                 {index < pipelineSteps.length - 1 ? (
-                  <span className="hidden text-2xl text-[var(--dim-foreground)] md:inline">➜</span>
+                  <span className="hidden text-xl text-[var(--dim-foreground)] md:inline">➜</span>
                 ) : null}
               </div>
             ))}
