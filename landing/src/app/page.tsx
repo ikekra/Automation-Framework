@@ -231,7 +231,7 @@ export default function Home() {
             ))}
           </div>
           <div className="flex items-center gap-3">
-            <Link href={`${appUrl}/login`} className="btn-secondary rounded-full px-4 py-2 text-xs font-semibold">
+            <Link href={`${appUrl}/login`} className="btn-secondary rounded-full px-4 py-2.5 text-xs font-semibold">
               Get started
             </Link>
             <button
