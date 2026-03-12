@@ -274,7 +274,7 @@ export default function Home() {
           </p>
           <div className="stagger mt-8 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: "0.4s" }}>
             <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">
-              Start free
+              Start free trial
             </Link>
             <Link href="#showcase" className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
               View demo
