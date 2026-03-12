@@ -371,7 +371,7 @@ export default function Home() {
                 </div>
                 <span>pipeline.ts</span>
               </div>
-              <pre className="mt-6 whitespace-pre-wrap text-xs leading-6 text-[var(--muted-foreground)]">
+              <pre className="mt-6 whitespace-pre-wrap text-[11px] leading-6 text-[var(--muted-foreground)]">
                 <code>
                   <span style={{ color: "#00e5ff" }}>import</span> <span style={{ color: "#e8f4fd" }}>{"{"} pipeline, stage {"}"}</span> <span style={{ color: "#00e5ff" }}>from</span> <span style={{ color: "#7c3aed" }}>"@autoflow/core"</span>;
                   {"\n\n"}
