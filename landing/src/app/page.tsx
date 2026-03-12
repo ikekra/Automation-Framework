@@ -13,7 +13,7 @@ const navLinks = [
 ];
 
 const stats = [
-  { label: "tests/day", value: 2400000, suffix: "+" },
+  { label: "tests per day", value: 2400000, suffix: "+" },
   { label: "uptime", value: 9999, suffix: "%" },
   { label: "integrations", value: 200, suffix: "+" },
   { label: "engineers", value: 18000, suffix: "+" }
