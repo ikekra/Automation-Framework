@@ -300,7 +300,7 @@ export default function Home() {
             {stats.map((stat, index) => (
               <div key={stat.label} className="flex flex-col gap-2">
                 <p className="text-2xl font-semibold text-white">{formattedCounts[index]}</p>
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--dim-foreground)]">{stat.label}</p>
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--dim-foreground)]">{stat.label}</p>
               </div>
             ))}
           </div>
