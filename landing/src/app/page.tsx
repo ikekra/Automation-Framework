@@ -362,7 +362,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="code-card reveal rounded-2xl p-6">
+            <div className="code-card reveal rounded-2xl p-5">
               <div className="flex items-center justify-between text-xs text-[var(--dim-foreground)]">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#f97316]" />
