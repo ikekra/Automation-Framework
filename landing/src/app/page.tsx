@@ -414,7 +414,7 @@ export default function Home() {
         <section id="integrations" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
           <div className="reveal text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Integrations</p>
-            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Connect to everything you already use</h2>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Connect to the stack you already use</h2>
           </div>
           <div className="reveal glass-card mx-auto mt-8 max-w-5xl overflow-hidden rounded-3xl border border-[var(--border)]">
             <Image
