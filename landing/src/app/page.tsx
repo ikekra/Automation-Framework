@@ -486,7 +486,7 @@ export default function Home() {
               </span>
             </h2>
             <p className="mt-3 text-sm text-[var(--muted-foreground)]">
-              Start free today and ship faster with a pipeline your team trusts.
+              Start free today and ship faster with a pipeline your team can trust.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">Start free</Link>
