@@ -68,7 +68,7 @@ h6 {
     linear-gradient(0deg, rgba(0, 188, 212, 0.12) 1px, transparent 1px);
   background-size: 80px 80px;
   animation: grid-move 18s linear infinite;
-  opacity: 0.4;
+  opacity: 0.32;
   pointer-events: none;
 }
 
