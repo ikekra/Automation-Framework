@@ -22,7 +22,7 @@ const stats = [
 const features = [
   {
     title: "Zero-config setup",
-    description: "Spin up new test pipelines with a single config file and opinionated defaults.",
+    description: "Spin up pipelines with a single config file and opinionated defaults.",
     accent: "#00e5ff",
     icon: "⚡"
   },
