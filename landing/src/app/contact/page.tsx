@@ -61,10 +61,10 @@ export default function ContactPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-16 sm:px-6">
         <section className="glass-card rounded-3xl px-8 py-12">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Contact</p>
-          <h1 className="mt-4 text-3xl font-semibold sm:text-4xl">Open to internships & junior roles</h1>
+          <h1 className="mt-4 text-3xl font-semibold sm:text-4xl">Open to internships and junior roles</h1>
           <p className="mt-3 max-w-2xl text-sm text-[var(--muted-foreground)]">
-            I'm a student building automation tools and UI systems. If this demo looks useful, I'd love to connect about
-            internship or junior developer roles.
+            I'm a student focused on automation tools and thoughtful UI systems. If this demo looks useful, I'd love to
+            connect about internship or junior developer roles.
           </p>
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -112,7 +112,9 @@ export default function ContactPage() {
                 Back to demo
               </Link>
             </div>
-            <p className="text-xs text-[var(--dim-foreground)]">Draft opens in your email app. Nothing is sent automatically.</p>
+            <p className="text-xs text-[var(--dim-foreground)]">
+              Draft opens in your email app. Nothing is sent automatically. Typical response time: 1-2 business days.
+            </p>
           </form>
           <p className="mt-4 text-xs text-[var(--dim-foreground)]">{contactEmail}</p>
         </section>
