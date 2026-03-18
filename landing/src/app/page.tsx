@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,51 +9,44 @@ const navLinks = [
   { label: "SDK", href: "#showcase" },
   { label: "Pipeline", href: "#pipeline" },
   { label: "Integrations", href: "#integrations" },
-  { label: "Pricing", href: "#pricing" }
-];
-
-const stats = [
-  { label: "tests per day", value: 2400000, suffix: "+" },
-  { label: "uptime", value: 9999, suffix: "%" },
-  { label: "integrations", value: 200, suffix: "+" },
-  { label: "engineers", value: 18000, suffix: "+" }
+  { label: "Contact", href: "/contact" }
 ];
 
 const features = [
   {
     title: "Zero-config setup",
     description: "Spin up pipelines with a single config file and opinionated defaults.",
-    accent: "#00e5ff",
+    accent: "var(--primary)",
     icon: "⚡"
   },
   {
     title: "AI orchestration",
     description: "Adaptive retries and smart parallelism keep your suites fast and reliable.",
-    accent: "#7c3aed",
+    accent: "var(--secondary)",
     icon: "🧠"
   },
   {
     title: "Parallel execution",
     description: "Distribute workloads across runners with autoscaling and adaptive queues.",
-    accent: "#f97316",
+    accent: "var(--tertiary)",
     icon: "🧩"
   },
   {
     title: "Universal connectors",
     description: "Plug into CI/CD, cloud, and observability stacks without custom glue code.",
-    accent: "#00e5ff",
+    accent: "var(--primary)",
     icon: "🔌"
   },
   {
     title: "Real-time observability",
     description: "Track latency, flakiness, and failures with live diagnostics and traces.",
-    accent: "#7c3aed",
+    accent: "var(--secondary)",
     icon: "📡"
   },
   {
     title: "Enterprise security",
     description: "SSO, SOC-ready controls, and hardened scanning baked in by default.",
-    accent: "#f97316",
+    accent: "var(--tertiary)",
     icon: "🛡️"
   }
 ];
@@ -107,33 +100,11 @@ const integrations = [
   "Figma"
 ];
 
-const pricing = [
-  {
-    tier: "Free",
-    price: "$0",
-    description: "Best for solo builders getting started.",
-    features: ["Community access", "1 pipeline", "Basic analytics", "Email support"]
-  },
-  {
-    tier: "Pro",
-    price: "$49/mo",
-    description: "For teams shipping weekly releases.",
-    features: ["Unlimited pipelines", "AI orchestration", "Priority queue", "Exportable reports"],
-    featured: true
-  },
-  {
-    tier: "Enterprise",
-    price: "Custom",
-    description: "Dedicated infrastructure and compliance.",
-    features: ["SSO/SAML", "Audit trails", "Dedicated success", "Custom SLAs"]
-  }
-];
+const contactEmail = "workforiris78@gmail.com";
 
 export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
-  const [counts, setCounts] = useState(stats.map(() => 0));
-  const [activeStep, setActiveStep] = useState(0);
-  const countersStarted = useRef(false);
+  const activeStep = 0;
 
   useEffect(() => {
     const revealElements = document.querySelectorAll(".reveal");
@@ -154,65 +125,16 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const statsSection = document.getElementById("stats");
-    if (!statsSection) return;
-
-    const animateCounter = (index, target) => {
-      const start = performance.now();
-      const duration = 1200;
-
-      const tick = (now) => {
-        const progress = Math.min((now - start) / duration, 1);
-        const value = Math.floor(progress * target);
-        setCounts((prev) => {
-          const next = [...prev];
-          next[index] = value;
-          return next;
-        });
-        if (progress < 1) requestAnimationFrame(tick);
-      };
-
-      requestAnimationFrame(tick);
-    };
-
-    const counterObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !countersStarted.current) {
-            countersStarted.current = true;
-            stats.forEach((stat, index) => animateCounter(index, stat.value));
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    counterObserver.observe(statsSection);
-
-    return () => counterObserver.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % pipelineSteps.length);
-    }, 1800);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const formattedCounts = useMemo(() =>
-    counts.map((value, index) => {
-      const stat = stats[index];
-      const formatted = new Intl.NumberFormat("en-US").format(value);
-      return `${formatted}${stat.suffix}`;
-    }),
-  [counts]);
-
   const appUrl = process.env.NEXT_PUBLIC_FRONTEND_APP_URL || "http://localhost:5173";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-50 focus:rounded-full focus:bg-[var(--surface)] focus:px-4 focus:py-2 focus:text-xs focus:font-semibold focus:text-[var(--foreground)]"
+      >
+        Skip to main content
+      </a>
       <div className="grid-overlay" aria-hidden="true" />
       <div className="orb cyan" style={{ width: 360, height: 360, top: "-120px", left: "-120px" }} />
       <div className="orb purple" style={{ width: 420, height: 420, top: "20%", right: "-180px" }} />
@@ -221,13 +143,24 @@ export default function Home() {
       <header className="nav-load sticky top-0 z-30 border-b border-[var(--border)] bg-[color:rgba(255,255,255,0.8)] backdrop-blur dark:bg-[color:rgba(6,10,16,0.8)]">
         <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-2 text-lg font-semibold">
-            <span className="bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] bg-clip-text text-transparent">⚡ AutoFlow</span>
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: "linear-gradient(90deg, var(--primary), var(--secondary))" }}
+            >
+              ⚡ AutoFlow
+            </span>
           </div>
           <div className="hidden items-center gap-6 text-sm text-[var(--muted-foreground)] md:flex">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className="transition hover:text-[var(--foreground)]">
-                {link.label}
-              </a>
+              link.href.startsWith("#") ? (
+                <a key={link.href} href={link.href} className="transition hover:text-[var(--foreground)]">
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href} className="transition hover:text-[var(--foreground)]">
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
           <div className="flex items-center gap-3">
@@ -248,37 +181,60 @@ export default function Home() {
           <div className="md:hidden">
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 pb-4 text-sm text-[var(--muted-foreground)] sm:px-6">
               {navLinks.map((link) => (
-                <a key={link.href} href={link.href} className="transition hover:text-[var(--foreground)]" onClick={() => setNavOpen(false)}>
-                  {link.label}
-                </a>
+                link.href.startsWith("#") ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="transition hover:text-[var(--foreground)]"
+                    onClick={() => setNavOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="transition hover:text-[var(--foreground)]"
+                    onClick={() => setNavOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </div>
           </div>
         ) : null}
       </header>
 
-      <main>
+      <main id="main-content">
         <section className="mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
           <div className="stagger flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1 text-xs text-[var(--muted-foreground)]" style={{ animationDelay: "0.1s" }}>
             <span className="badge-dot" />
-            v3.1 — Now with AI-powered pipelines
+            Student build — internship/junior demo
           </div>
           <h1 className="stagger mt-6 text-4xl font-extrabold sm:text-6xl" style={{ animationDelay: "0.2s" }}>
-            Automate Everything.
-            <span className="block bg-gradient-to-r from-[#00e5ff] via-[#7c3aed] to-[#f97316] bg-clip-text text-transparent">
-              Ship Faster.
+            Automation you can
+            <span
+              className="block bg-clip-text text-transparent"
+              style={{ backgroundImage: "linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary))" }}
+            >
+              trust & explain.
             </span>
           </h1>
           <p className="stagger mt-4 max-w-2xl text-base text-[var(--muted-foreground)] sm:text-lg" style={{ animationDelay: "0.3s" }}>
-            AutoFlow brings orchestration, observability, and security to every automation framework so teams ship confidently at scale.
+            AutoFlow is a student-built automation framework demo. I’m sharing it to showcase my work and find internship or
+            junior developer opportunities.
           </p>
           <div className="stagger mt-8 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: "0.4s" }}>
             <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">
-              Start free trial
+              Explore the app
             </Link>
             <Link href="#showcase" className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
               View demo
             </Link>
+            <a href={`mailto:${contactEmail}`} className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
+              Contact me
+            </a>
           </div>
           <div className="stagger mt-12 w-full max-w-4xl rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.5)]" style={{ animationDelay: "0.5s" }}>
             <div className="rounded-2xl border border-[rgba(0,229,255,0.12)] bg-[var(--surface-2)] p-4">
@@ -295,22 +251,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="stats" className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
-          <div className="glass-card reveal grid gap-4 rounded-2xl px-5 py-5 text-center sm:grid-cols-4">
-            {stats.map((stat, index) => (
-              <div key={stat.label} className="flex flex-col gap-2">
-                <p className="text-2xl font-semibold text-white">{formattedCounts[index]}</p>
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--dim-foreground)]">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section id="features" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
           <div className="reveal text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Features</p>
-            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Everything your QA org needs</h2>
-            <p className="mt-3 text-sm text-[var(--muted-foreground)]">From setup to rollout, AutoFlow handles the full pipeline with enterprise-grade controls.</p>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">What I focused on building</h2>
+            <p className="mt-3 text-sm text-[var(--muted-foreground)]">The kind of fundamentals I’d bring to a junior or internship role.</p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
@@ -336,7 +281,7 @@ export default function Home() {
               <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Code Showcase</p>
               <h2 className="text-3xl font-semibold sm:text-4xl">A pipeline your team can read</h2>
               <p className="text-sm text-[var(--muted-foreground)]">
-                Define flows in a single config. AutoFlow handles orchestration, retries, and observability for you.
+                Define flows in one config. AutoFlow handles orchestration, retries, and observability while keeping the logic approachable.
               </p>
               <div className="glass-card mt-6 w-full max-w-[360px] overflow-hidden rounded-2xl border border-[var(--border)] sm:max-w-[420px] lg:ml-auto">
                 <Image
@@ -349,18 +294,8 @@ export default function Home() {
                 />
               </div>
               <Link href={`${appUrl}/register`} className="btn-primary inline-flex rounded-full px-6 py-3 text-sm font-semibold">
-                Get the SDK
+                View the SDK
               </Link>
-              <div className="glass-card mt-6 overflow-hidden rounded-2xl border border-[var(--border)]">
-                <Image
-                  src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80"
-                  alt="Automation workflow overview"
-                  width={1400}
-                  height={900}
-                  sizes="(max-width: 1024px) 100vw, 520px"
-                  className="h-auto w-full object-cover opacity-60"
-                />
-              </div>
             </div>
             <div className="code-card reveal rounded-2xl p-5">
               <div className="flex items-center justify-between text-xs text-[var(--dim-foreground)]">
@@ -393,7 +328,7 @@ export default function Home() {
         <section id="pipeline" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
           <div className="reveal text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Pipeline Visualizer</p>
-            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">A release flow that never stalls</h2>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Release flow with clear ownership</h2>
           </div>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             {pipelineSteps.map((step, index) => (
@@ -416,16 +351,6 @@ export default function Home() {
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Integrations</p>
             <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Connect to the stack you already use</h2>
           </div>
-          <div className="reveal glass-card mx-auto mt-8 max-w-5xl overflow-hidden rounded-3xl border border-[var(--border)]">
-            <Image
-              src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=1600&q=80"
-              alt="Integrations wall"
-              width={1600}
-              height={900}
-              sizes="(max-width: 1024px) 100vw, 1040px"
-              className="h-auto w-full object-cover opacity-45"
-            />
-          </div>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             {integrations.map((item) => (
               <span key={item} className="integration-pill rounded-full px-4 py-2 text-[11px] font-semibold">
@@ -435,63 +360,22 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
-          <div className="reveal text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Pricing</p>
-            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Plans that scale with your team</h2>
-          </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {pricing.map((plan) => (
-              <div key={plan.tier} className={`pricing-card glass-card reveal rounded-2xl p-6 ${plan.featured ? "featured" : ""}`}>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-[var(--foreground)]">{plan.tier}</p>
-                  {plan.featured ? (
-                    <span className="rounded-full bg-[rgba(0,229,255,0.15)] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#00e5ff]">Most popular</span>
-                  ) : null}
-                </div>
-                <p className="mt-4 text-3xl font-semibold text-[var(--foreground)]">{plan.price}</p>
-                <p className="mt-2 text-sm text-[var(--muted-foreground)]">{plan.description}</p>
-                <ul className="mt-4 space-y-2 text-sm text-[var(--muted-foreground)]">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2">
-                      <span className="text-[#00e5ff]">✔</span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href={`${appUrl}/register`} className="btn-secondary mt-6 inline-flex w-full justify-center rounded-full px-4 py-2 text-xs font-semibold">
-                  Choose plan
-                </Link>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
-          <div className="reveal glass-card relative overflow-hidden rounded-3xl px-8 py-12 text-center">
-            <div className="absolute inset-0 opacity-20">
-              <Image
-                src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1600&q=80"
-                alt="Glowing server racks"
-                width={1600}
-                height={900}
-                sizes="(max-width: 1024px) 100vw, 1040px"
-                className="h-full w-full object-cover"
-              />
+          <div className="reveal glass-card flex flex-col items-center justify-between gap-6 rounded-3xl px-8 py-10 text-center sm:flex-row sm:text-left">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Contact</p>
+              <h2 className="mt-3 text-2xl font-semibold sm:text-3xl">Looking for internships or junior roles</h2>
+              <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+                If you’re hiring students, I’d love to connect and share more work.
+              </p>
             </div>
-            <div className="relative">
-            <h2 className="text-3xl font-semibold sm:text-4xl">
-              <span className="bg-gradient-to-r from-[#00e5ff] via-[#7c3aed] to-[#f97316] bg-clip-text text-transparent">
-                Ready to automate?
-              </span>
-            </h2>
-            <p className="mt-3 text-sm text-[var(--muted-foreground)]">
-              Start free today and ship faster with a pipeline your team can trust.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">Start free</Link>
-              <Link href="#showcase" className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">See it in action</Link>
-            </div>
+            <div className="flex flex-wrap justify-center gap-3 sm:justify-end">
+              <Link href="/contact" className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">
+                Contact page
+              </Link>
+              <a href={`mailto:${contactEmail}`} className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
+                Email me
+              </a>
             </div>
           </div>
         </section>
@@ -502,9 +386,9 @@ export default function Home() {
           <span className="font-semibold text-[var(--muted-foreground)]">⚡ AutoFlow</span>
           <span>© 2026 AutoFlow</span>
           <div className="flex items-center gap-4">
+            <Link href="/contact" className="hover:text-[var(--foreground)]">Contact</Link>
             <Link href="#" className="hover:text-[var(--foreground)]">Privacy</Link>
             <Link href="#" className="hover:text-[var(--foreground)]">Terms</Link>
-            <Link href="#" className="hover:text-[var(--foreground)]">Status</Link>
           </div>
         </div>
       </footer>
