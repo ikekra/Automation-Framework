@@ -1,11 +1,12 @@
 ﻿"use client";
 
+import type { FormEvent } from "react";
 import Link from "next/link";
 
 const contactEmail = "workforiris78@gmail.com";
 
 export default function ContactPage() {
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name");
@@ -73,6 +74,8 @@ export default function ContactPage() {
                   name="name"
                   type="text"
                   placeholder="Your name"
+                  autoComplete="name"
+                  required
                   className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--foreground)]"
                 />
               </label>
@@ -82,6 +85,7 @@ export default function ContactPage() {
                   name="role"
                   type="text"
                   placeholder="Internship / Junior / Contract"
+                  autoComplete="organization-title"
                   className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--foreground)]"
                 />
               </label>
@@ -92,6 +96,8 @@ export default function ContactPage() {
                 name="message"
                 rows={5}
                 placeholder="Tell me about the role or team"
+                autoComplete="off"
+                required
                 className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--foreground)]"
               />
             </label>
