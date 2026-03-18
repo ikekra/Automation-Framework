@@ -54,7 +54,7 @@ const features = [
 const pipelineSteps = [
   {
     name: "Define",
-    description: "Model suites with clear ownership.",
+    description: "Model suites with clear ownership and intent.",
     icon: "🧭"
   },
   {
@@ -69,7 +69,7 @@ const pipelineSteps = [
   },
   {
     name: "Observe",
-    description: "Trace every signal in real time.",
+    description: "Trace every signal with live diagnostics.",
     icon: "👀"
   },
   {
