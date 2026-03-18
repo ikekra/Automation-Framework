@@ -210,7 +210,7 @@ export default function Home() {
         <section className="mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
           <div className="stagger flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1 text-xs text-[var(--muted-foreground)]" style={{ animationDelay: "0.1s" }}>
             <span className="badge-dot" />
-            Student build — internship/junior demo
+            Student build — internship-ready demo
           </div>
           <h1 className="stagger mt-6 text-4xl font-extrabold sm:text-6xl" style={{ animationDelay: "0.2s" }}>
             Automation you can
@@ -218,12 +218,12 @@ export default function Home() {
               className="block bg-clip-text text-transparent"
               style={{ backgroundImage: "linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary))" }}
             >
-              trust & explain.
+              trust and ship.
             </span>
           </h1>
           <p className="stagger mt-4 max-w-2xl text-base text-[var(--muted-foreground)] sm:text-lg" style={{ animationDelay: "0.3s" }}>
-            AutoFlow is a student-built automation framework demo. I’m sharing it to showcase my work and find internship or
-            junior developer opportunities.
+            AutoFlow is a student-built automation framework demo. I’m sharing it to showcase my work and connect with
+            internship or junior developer teams.
           </p>
           <div className="stagger mt-8 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: "0.4s" }}>
             <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-6 py-3 text-sm font-semibold">
