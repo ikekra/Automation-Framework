@@ -106,6 +106,8 @@ const stats = [
   { label: "SDK tests covered", value: "96%", tone: "var(--tertiary)" }
 ];
 
+const logos = ["Vercel", "Railway", "Render", "AWS", "Azure", "Cloudflare"];
+
 const contactEmail = "workforiris78@gmail.com";
 
 export default function Home() {
@@ -241,6 +243,12 @@ export default function Home() {
             <a href={`mailto:${contactEmail}`} className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
               Contact me
             </a>
+          </div>
+          <div className="stagger mt-6 flex flex-wrap items-center justify-center gap-3 text-xs text-[var(--dim-foreground)]" style={{ animationDelay: "0.45s" }}>
+            <span className="uppercase tracking-[0.22em] text-[var(--muted-foreground)]">Deploys to</span>
+            {logos.map((logo) => (
+              <span key={logo} className="logo-pill">{logo}</span>
+            ))}
           </div>
           <div className="stagger mt-8 grid w-full max-w-5xl gap-4 sm:grid-cols-3" style={{ animationDelay: "0.5s" }}>
             {stats.map((item) => (
