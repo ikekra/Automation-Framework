@@ -9,6 +9,7 @@ const navLinks = [
   { label: "SDK", href: "#showcase" },
   { label: "Pipeline", href: "#pipeline" },
   { label: "Integrations", href: "#integrations" },
+  { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "/contact" }
 ];
 
