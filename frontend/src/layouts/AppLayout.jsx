@@ -228,7 +228,7 @@ export const AppLayout = () => {
           </GlassCard>
         ) : null}
 
-        <div className="mx-auto grid w-full max-w-7xl gap-4 md:grid-cols-[auto,1fr] md:gap-5">
+        <main id="app-main" className="mx-auto grid w-full max-w-7xl gap-4 md:grid-cols-[auto,1fr] md:gap-5">
           <GlassCard
             className="relative overflow-hidden p-4 md:p-5"
             animate={{ width: collapsed ? 96 : 272 }}
@@ -313,7 +313,7 @@ export const AppLayout = () => {
           <GlassCard className="p-4 sm:p-6 md:p-8">
             <Outlet />
           </GlassCard>
-        </div>
+        </main>
 
         <AnimatePresence>
           {showUserModal ? (

@@ -236,6 +236,30 @@ a {
   filter: saturate(0.85);
 }
 
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 100;
+  border-radius: 12px;
+  background: var(--bg-strong);
+  color: var(--text-main);
+  padding: 10px 14px;
+  border: 1px solid var(--border-soft);
+}
+
+.skip-link:focus {
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 .glow-hover:hover {
   box-shadow: 0 0 0 1px rgba(227, 139, 76, 0.3), 0 18px 36px -28px rgba(15, 122, 107, 0.6);
 }
