@@ -108,6 +108,25 @@ const stats = [
 
 const logos = ["Vercel", "Railway", "Render", "AWS", "Azure", "Cloudflare"];
 
+const faqs = [
+  {
+    q: "Is this production-ready?",
+    a: "It’s a portfolio build that mirrors production patterns: JWT auth, SSRF-safe URL validation, and queued analysis jobs."
+  },
+  {
+    q: "How does AI fit in?",
+    a: "The backend wires to OpenAI for analysis, with toggles for mocking during local dev and tests."
+  },
+  {
+    q: "Can I deploy it quickly?",
+    a: "Yes. Set env vars, point to a managed Mongo, and ship the Docker image to Render, Railway, or AWS."
+  },
+  {
+    q: "Does it support dark mode?",
+    a: "The landing and app share theme tokens; you can hook them to a toggle if you want user control."
+  }
+];
+
 const contactEmail = "workforiris78@gmail.com";
 
 export default function Home() {
@@ -380,6 +399,25 @@ export default function Home() {
               <span key={item} className="integration-pill rounded-full px-4 py-2 text-[11px] font-semibold">
                 {item}
               </span>
+            ))}
+          </div>
+        </section>
+
+        <section id="faq" className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
+          <div className="reveal text-center">
+            <span className="section-label">FAQ</span>
+            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Details recruiters ask first</h2>
+            <p className="mt-3 text-sm text-[var(--muted-foreground)]">Quick answers about readiness, AI, deploy path, and theming.</p>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {faqs.map((item) => (
+              <div key={item.q} className="faq-card reveal">
+                <div className="faq-question">
+                  <p className="text-base font-semibold text-[var(--foreground)]">{item.q}</p>
+                  <span className="text-[var(--primary)]">?</span>
+                </div>
+                <p className="faq-answer">{item.a}</p>
+              </div>
             ))}
           </div>
         </section>
