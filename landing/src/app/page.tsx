@@ -100,6 +100,12 @@ const integrations = [
   "Figma"
 ];
 
+const stats = [
+  { label: "Pipelines modeled", value: "120+", tone: "var(--primary)" },
+  { label: "Avg. build speedup", value: "3.4x", tone: "var(--secondary)" },
+  { label: "SDK tests covered", value: "96%", tone: "var(--tertiary)" }
+];
+
 const contactEmail = "workforiris78@gmail.com";
 
 export default function Home() {
@@ -140,7 +146,7 @@ export default function Home() {
       <div className="orb purple" style={{ width: 420, height: 420, top: "20%", right: "-180px" }} />
       <div className="orb blue" style={{ width: 360, height: 360, bottom: "-140px", left: "30%" }} />
 
-      <header className="nav-load sticky top-0 z-30 border-b border-[var(--border)] bg-[color:rgba(255,255,255,0.8)] backdrop-blur dark:bg-[color:rgba(6,10,16,0.8)]">
+      <header className="nav-load sticky top-0 z-30 border-b border-[var(--border)] bg-[color:rgba(7,11,18,0.78)] backdrop-blur">
         <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-2 text-lg font-semibold">
             <span
@@ -208,9 +214,9 @@ export default function Home() {
 
       <main id="main-content">
         <section className="mx-auto flex min-h-[90vh] w-full max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6">
-          <div className="stagger flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1 text-xs text-[var(--muted-foreground)]" style={{ animationDelay: "0.1s" }}>
+          <div className="stagger section-label" style={{ animationDelay: "0.1s" }}>
             <span className="badge-dot" />
-            Student build — internship-ready demo
+            Student-built · Deploy-ready
           </div>
           <h1 className="stagger mt-6 text-4xl font-extrabold sm:text-6xl" style={{ animationDelay: "0.2s" }}>
             Automation you can
@@ -236,6 +242,16 @@ export default function Home() {
               Contact me
             </a>
           </div>
+          <div className="stagger mt-8 grid w-full max-w-5xl gap-4 sm:grid-cols-3" style={{ animationDelay: "0.5s" }}>
+            {stats.map((item) => (
+              <div key={item.label} className="stat-card text-left">
+                <p className="text-xs uppercase tracking-[0.18em] text-[var(--dim-foreground)]">{item.label}</p>
+                <p className="mt-2 text-2xl font-bold" style={{ color: item.tone }}>
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </div>
           <div className="stagger mt-12 w-full max-w-4xl rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.5)]" style={{ animationDelay: "0.5s" }}>
             <div className="rounded-2xl border border-[rgba(0,229,255,0.12)] bg-[var(--surface-2)] p-4">
               <Image
@@ -253,7 +269,7 @@ export default function Home() {
 
         <section id="features" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
           <div className="reveal text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Features</p>
+            <span className="section-label">Features</span>
             <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">What I focused on building</h2>
             <p className="mt-3 text-sm text-[var(--muted-foreground)]">The kind of fundamentals I’d bring to a junior or internship role.</p>
           </div>
