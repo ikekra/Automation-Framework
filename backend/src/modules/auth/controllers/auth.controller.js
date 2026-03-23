@@ -100,6 +100,7 @@ const setRefreshCookie = (res, refreshToken) => {
 
 export const register = async (req, res) => {
   const { name, email, password, organization, phone, plan } = req.body;
+  const autoVerify = env.mockEmail === true;
 
   const existing = await User.findOne({ email }).lean();
   if (existing) {
@@ -123,7 +124,14 @@ export const register = async (req, res) => {
     emailVerificationTokenExpiresAt: verification.expiresAt
   });
 
-  await sendVerificationEmail({ email, token: verification.token });
+  if (autoVerify) {
+    user.emailVerified = true;
+    user.emailVerificationTokenHash = null;
+    user.emailVerificationTokenExpiresAt = null;
+    await user.save();
+  } else {
+    await sendVerificationEmail({ email, token: verification.token });
+  }
 
   res.status(201).json({
     success: true,
@@ -133,6 +141,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  const autoVerify = env.mockEmail === true;
 
   const user = await User.findOne({ email }).select("+passwordHash");
   if (!user) {
@@ -142,6 +151,12 @@ export const login = async (req, res) => {
   const validPassword = await bcrypt.compare(password, user.passwordHash);
   if (!validPassword) {
     throw new AppError("Invalid credentials", 401);
+  }
+
+  if (!user.emailVerified && autoVerify) {
+    user.emailVerified = true;
+    user.emailVerificationTokenHash = null;
+    user.emailVerificationTokenExpiresAt = null;
   }
 
   if (!user.emailVerified) {
