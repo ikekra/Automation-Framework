@@ -389,6 +389,24 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="mx-auto w-full max-w-5xl px-4 pb-6 sm:px-6">
+          <div className="cta-band reveal flex flex-col gap-4 rounded-3xl p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[var(--dim-foreground)]">Try it</p>
+              <h3 className="mt-2 text-2xl font-semibold text-[var(--foreground)]">Spin up a demo in under 5 minutes</h3>
+              <p className="mt-1 text-sm text-[var(--muted-foreground)]">Env template, mocked AI toggle, and Postman collection are included.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link href={`${appUrl}/register`} className="btn-primary rounded-full px-5 py-3 text-sm font-semibold">
+                Launch sandbox
+              </Link>
+              <a href="/api/auth/signin" className="btn-secondary rounded-full px-5 py-3 text-sm font-semibold">
+                View auth flow
+              </a>
+            </div>
+          </div>
+        </section>
+
         <section id="integrations" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
           <div className="reveal text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Integrations</p>
