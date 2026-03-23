@@ -68,6 +68,21 @@ h3,
   transition-timing-function: ease;
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 a {
   color: inherit;
 }
@@ -213,6 +228,12 @@ a {
 
 .btn-secondary:hover {
   transform: translateY(-1px);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  transform: none;
+  filter: saturate(0.85);
 }
 
 .glow-hover:hover {
