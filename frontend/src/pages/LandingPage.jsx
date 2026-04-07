@@ -1,12 +1,32 @@
-﻿import { motion as Motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { GlassCard } from "../components/ui/GlassCard";
 import { LazyBackgroundImage } from "../components/ui/LazyBackgroundImage";
+import { useAuthStore } from "../store/authStore";
 
 const heroImage =
   "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1800&q=80";
 
+const planProfiles = {
+  starter: { title: "Starter", suites: 3, setupHours: 6, aiHours: 2 },
+  growth: { title: "Growth", suites: 8, setupHours: 18, aiHours: 6 },
+  enterprise: { title: "Enterprise", suites: 14, setupHours: 34, aiHours: 11 }
+};
+
 export const LandingPage = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const [selectedPlan, setSelectedPlan] = useState("growth");
+
+  const selectedProfile = planProfiles[selectedPlan];
+  const savings = useMemo(
+    () => Math.max(selectedProfile.setupHours - selectedProfile.aiHours, 0),
+    [selectedProfile]
+  );
+
+  const primaryCtaTo = isAuthenticated ? "/dashboard" : "/register";
+  const primaryCtaLabel = isAuthenticated ? "Go to dashboard" : "Start building";
+
   return (
     <main className="min-h-screen px-4 py-10 sm:px-6 md:py-14">
       <section className="mx-auto w-full max-w-6xl space-y-6">
@@ -42,7 +62,7 @@ export const LandingPage = () => {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
-                <Link to="/register" className="btn-primary glow-hover">Start building</Link>
+                <Link to={primaryCtaTo} className="btn-primary glow-hover">{primaryCtaLabel}</Link>
               </Motion.div>
               <Motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                 <Link to="/login" className="btn-secondary bg-white/85">Login</Link>
@@ -105,13 +125,55 @@ export const LandingPage = () => {
         </div>
 
         <GlassCard className="p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Framework effort estimator</h2>
+              <p className="mt-1 text-sm text-muted">
+                Pick a project profile to estimate setup effort and expected hours saved with AI-assisted generation.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              {Object.entries(planProfiles).map(([key, profile]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSelectedPlan(key)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                    selectedPlan === key
+                      ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+                      : "bg-white/70 text-slate-700 hover:bg-white dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800/80"
+                  }`}
+                >
+                  {profile.title}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-white/20 bg-white/50 p-4 dark:border-white/10 dark:bg-slate-900/40">
+              <p className="text-xs uppercase tracking-[0.18em] text-muted">Estimated suites</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">{selectedProfile.suites}</p>
+            </div>
+            <div className="rounded-2xl border border-white/20 bg-white/50 p-4 dark:border-white/10 dark:bg-slate-900/40">
+              <p className="text-xs uppercase tracking-[0.18em] text-muted">Manual setup</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">{selectedProfile.setupHours}h</p>
+            </div>
+            <div className="rounded-2xl border border-emerald-300/30 bg-emerald-100/60 p-4 dark:border-emerald-300/20 dark:bg-emerald-900/20">
+              <p className="text-xs uppercase tracking-[0.18em] text-emerald-800 dark:text-emerald-200">Potential savings</p>
+              <p className="mt-2 text-2xl font-bold text-emerald-900 dark:text-emerald-100">{savings}h</p>
+            </div>
+          </div>
+        </GlassCard>
+
+        <GlassCard className="p-6">
           <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <div>
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Ready to build your next framework?</h2>
               <p className="mt-1 text-sm text-muted">Create an account in minutes and ship faster QA foundations.</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link to="/register" className="btn-primary">Get started</Link>
+              <Link to={primaryCtaTo} className="btn-primary">{primaryCtaLabel}</Link>
               <Link to="/login" className="btn-secondary">Sign in</Link>
             </div>
           </div>
