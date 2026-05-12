@@ -9,16 +9,25 @@ export const PageShell = ({ title, subtitle, children, action, eyebrow = "Worksp
       transition={{ duration: 0.25, ease: "easeOut" }}
       className="space-y-6"
     >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">{eyebrow}</p>
-          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">{title}</h1>
-          {subtitle ? <p className="mt-2 text-sm text-muted sm:text-base">{subtitle}</p> : null}
+      <div className="overflow-hidden rounded-[30px] border border-white/30 bg-[linear-gradient(135deg,rgba(255,255,255,0.82),rgba(239,246,255,0.72),rgba(220,252,231,0.62))] p-6 shadow-[0_28px_70px_-42px_rgba(15,23,42,0.28)] dark:border-white/10 dark:bg-[linear-gradient(135deg,rgba(8,17,32,0.92),rgba(15,23,42,0.88),rgba(9,54,62,0.82))]">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.34em] text-soft">{eyebrow}</p>
+            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50 sm:text-4xl">
+              {title}
+            </h1>
+            {subtitle ? <p className="mt-3 text-sm text-soft sm:text-base">{subtitle}</p> : null}
+          </div>
+
+          {action ? (
+            <div className="rounded-[22px] border border-white/35 bg-white/72 p-1.5 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.2)] dark:border-white/10 dark:bg-slate-950/30">
+              {action}
+            </div>
+          ) : null}
         </div>
-        {action ? <div className="rounded-2xl border border-white/30 bg-white/60 p-1 dark:border-white/10 dark:bg-slate-900/50">{action}</div> : null}
       </div>
+
       {children}
     </Motion.section>
   );
 };
-

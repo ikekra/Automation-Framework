@@ -8,8 +8,8 @@ export const AppBackground = () => {
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <Motion.div
         className="bg-aurora"
-        animate={reduceMotion ? false : { opacity: [0.75, 0.95, 0.8], scale: [1, 1.03, 1] }}
-        transition={reduceMotion ? { duration: 0 } : { duration: 18, ease: "easeInOut", repeat: Infinity }}
+        animate={reduceMotion ? false : { opacity: [0.82, 1, 0.88], scale: [1, 1.04, 1] }}
+        transition={reduceMotion ? { duration: 0 } : { duration: 16, ease: "easeInOut", repeat: Infinity }}
       />
 
       <div className="bg-grid" />
@@ -17,24 +17,24 @@ export const AppBackground = () => {
 
       <Motion.div
         className="bg-orbit"
-        animate={reduceMotion ? false : { rotate: [0, 8, 0] }}
-        transition={reduceMotion ? { duration: 0 } : { duration: 22, ease: "easeInOut", repeat: Infinity }}
+        animate={reduceMotion ? false : { rotate: [0, 6, 0], x: [0, 8, 0] }}
+        transition={reduceMotion ? { duration: 0 } : { duration: 20, ease: "easeInOut", repeat: Infinity }}
       />
 
       <Motion.div
         className="bg-panel bg-panel-a"
-        animate={reduceMotion ? false : { y: [0, -18, 0], x: [0, 8, 0] }}
+        animate={reduceMotion ? false : { y: [0, -14, 0], x: [0, 6, 0] }}
         transition={reduceMotion ? { duration: 0 } : { duration: 12, ease: "easeInOut", repeat: Infinity }}
       />
       <Motion.div
         className="bg-panel bg-panel-b"
-        animate={reduceMotion ? false : { y: [0, 16, 0], x: [0, -10, 0] }}
+        animate={reduceMotion ? false : { y: [0, 12, 0], x: [0, -7, 0] }}
         transition={reduceMotion ? { duration: 0 } : { duration: 14, ease: "easeInOut", repeat: Infinity }}
       />
       <Motion.div
         className="bg-panel bg-panel-c"
-        animate={reduceMotion ? false : { y: [0, 12, 0], x: [0, -6, 0] }}
-        transition={reduceMotion ? { duration: 0 } : { duration: 10, ease: "easeInOut", repeat: Infinity }}
+        animate={reduceMotion ? false : { y: [0, 10, 0], x: [0, -4, 0] }}
+        transition={reduceMotion ? { duration: 0 } : { duration: 11, ease: "easeInOut", repeat: Infinity }}
       />
     </div>
   );

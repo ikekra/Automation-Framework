@@ -9,14 +9,14 @@ import { internalService } from "../services/api/internalService";
 
 const statusTheme = {
   healthy: {
-    dot: "bg-emerald-500",
-    card: "border-emerald-300 bg-emerald-50/80 dark:border-emerald-700 dark:bg-emerald-950/35",
-    text: "text-emerald-700 dark:text-emerald-300"
+    dot: "bg-[color:var(--primary)]",
+    card: "border-[color:var(--border-strong)] bg-[color:var(--primary-ink)] dark:border-[color:var(--border-strong)] dark:bg-[color:var(--primary-ink)]",
+    text: "text-[color:var(--primary-deep)] dark:text-[color:var(--text-main)]"
   },
   degraded: {
-    dot: "bg-amber-500",
-    card: "border-amber-300 bg-amber-50/80 dark:border-amber-700 dark:bg-amber-950/35",
-    text: "text-amber-700 dark:text-amber-300"
+    dot: "bg-[color:var(--accent)]",
+    card: "border-[rgba(196,138,58,0.32)] bg-[rgba(244,227,198,0.72)] dark:border-[rgba(214,164,90,0.24)] dark:bg-[rgba(214,164,90,0.14)]",
+    text: "text-[#8a5c1f] dark:text-[#f0d6ab]"
   },
   unhealthy: {
     dot: "bg-rose-500",

@@ -204,10 +204,10 @@ export const ProfilePage = () => {
       subtitle="Update your workspace details and account preferences."
     >
       <div className="flex flex-wrap gap-2">
-        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${user?.emailVerified ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-200"}`}>
+        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${user?.emailVerified ? "bg-[color:var(--primary-ink)] text-[color:var(--primary-deep)] dark:text-[color:var(--text-main)]" : "accent-badge"}`}>
           {user?.emailVerified ? "Email verified" : "Email not verified"}
         </span>
-        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${user?.totpEnabled ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-200" : "bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-200"}`}>
+        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${user?.totpEnabled ? "brand-badge" : "bg-white/70 text-slate-700 dark:bg-slate-900/60 dark:text-slate-200"}`}>
           {user?.totpEnabled ? "2FA enabled" : "2FA disabled"}
         </span>
         <span className="rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-900/60 dark:text-slate-200">

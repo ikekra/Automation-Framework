@@ -6,10 +6,11 @@ export const FrameworkBuilderPage = () => {
   return (
     <PageShell
       title="Framework Builder"
-      subtitle="Configure your tech stack and generate a downloadable starter framework."
+      subtitle="Configure your stack, generate a starter framework, and save the result directly to your account history."
+      eyebrow="Studio"
       action={(
         <Link to="/history" className="btn-secondary">
-          View history
+          Open history
         </Link>
       )}
     >

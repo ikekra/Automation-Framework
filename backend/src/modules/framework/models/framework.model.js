@@ -10,6 +10,7 @@ const generatedFileSchema = new mongoose.Schema(
 
 const frameworkSchema = new mongoose.Schema(
   {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
     language: { type: String, required: true, trim: true },
     automationTool: { type: String, required: true, trim: true },
     pattern: { type: String, required: true, trim: true },
@@ -27,5 +28,7 @@ const frameworkSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+frameworkSchema.index({ userId: 1, createdAt: -1 });
 
 export const Framework = mongoose.model("Framework", frameworkSchema);

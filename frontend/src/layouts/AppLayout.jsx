@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { GlassCard } from "../components/ui/GlassCard";
@@ -7,12 +7,18 @@ import { useToast } from "../context/ToastContext";
 import { useAuthStore } from "../store/authStore";
 
 const navItems = [
-  { to: "/dashboard", label: "Dashboard", short: "DB" },
-  { to: "/profile", label: "Profile", short: "PR" },
-  { to: "/framework-builder", label: "Builder", short: "BL" },
-  { to: "/history", label: "History", short: "HS" },
-  { to: "/web-app-tester", label: "Web Tester", short: "WT" },
-  { to: "/internal-self-test", label: "Internal QA", short: "IQ", adminOnly: true }
+  { to: "/dashboard", label: "Overview", short: "OV", description: "Workspace metrics and recent activity" },
+  { to: "/framework-builder", label: "Builder", short: "BL", description: "Compose and generate starter frameworks" },
+  { to: "/history", label: "Library", short: "LB", description: "Saved builds and authenticated downloads" },
+  { to: "/web-app-tester", label: "Analyzer", short: "AN", description: "Web app quality diagnostics and AI insights" },
+  { to: "/profile", label: "Settings", short: "ST", description: "Profile, security, and account configuration" },
+  { to: "/internal-self-test", label: "Ops QA", short: "QA", description: "Internal diagnostics for admins", adminOnly: true }
+];
+
+const workspaceHighlights = [
+  { label: "Availability", value: "99.9%", tone: "metric-tone-success" },
+  { label: "Response SLA", value: "< 2 min", tone: "metric-tone-primary" },
+  { label: "Security Layer", value: "JWT + 2FA", tone: "metric-tone-accent" }
 ];
 
 export const AppLayout = () => {
@@ -24,10 +30,10 @@ export const AppLayout = () => {
   const resendVerification = useAuthStore((state) => state.resendVerification);
   const { pushToast } = useToast();
 
-  const [collapsed, setCollapsed] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingProfile, setEditingProfile] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [profileForm, setProfileForm] = useState({
     name: user?.name || "",
     organization: user?.organization || "",
@@ -38,12 +44,18 @@ export const AppLayout = () => {
 
   const initials = useMemo(() => {
     const base = user?.name || user?.email || "U";
-    return base.slice(0, 1).toUpperCase();
+    return base.slice(0, 2).toUpperCase();
   }, [user]);
 
-  const visibleNavItems = useMemo(() => {
-    return navItems.filter((item) => !item.adminOnly || user?.role === "admin");
-  }, [user?.role]);
+  const visibleNavItems = useMemo(
+    () => navItems.filter((item) => !item.adminOnly || user?.role === "admin"),
+    [user?.role]
+  );
+
+  const activeItem = useMemo(
+    () => visibleNavItems.find((item) => location.pathname === item.to) || visibleNavItems[0],
+    [location.pathname, visibleNavItems]
+  );
 
   const lastLoginLabel = useMemo(() => {
     if (!user?.lastLogin) {
@@ -59,11 +71,6 @@ export const AppLayout = () => {
   }, [user?.lastLogin]);
 
   const onLogout = async () => {
-    await logout();
-    navigate("/login", { replace: true });
-  };
-
-  const onSwitchAccount = async () => {
     await logout();
     navigate("/login", { replace: true });
   };
@@ -101,19 +108,8 @@ export const AppLayout = () => {
   }, [showUserModal]);
 
   useEffect(() => {
-    if (!showUserModal) {
-      return undefined;
-    }
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setShowUserModal(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showUserModal]);
+    setMobileNavOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     setProfileForm({
@@ -143,177 +139,236 @@ export const AppLayout = () => {
 
   return (
     <UserModalProvider value={{ openUserModal: () => setShowUserModal(true) }}>
-      <div className="min-h-screen p-4 md:p-6">
-        <div className="mx-auto mb-3 flex w-full max-w-7xl items-center justify-between gap-4 md:mb-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted">Workspace</p>
-            <p className="text-base font-semibold text-slate-900 dark:text-slate-100">AutoForge Console</p>
-          </div>
-          <div className="relative" data-account-menu>
-            <button
-              type="button"
-              onClick={() => setAccountMenuOpen((prev) => !prev)}
-              className="flex items-center gap-2 rounded-2xl border border-white/30 bg-white/60 px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm dark:border-white/10 dark:bg-slate-900/50 dark:text-slate-100"
-            >
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-xs font-semibold text-white">
-                {initials}
-              </span>
-              <span className="hidden sm:block">{user?.name || user?.email}</span>
-            </button>
-
-            <AnimatePresence>
-              {accountMenuOpen ? (
-                <Motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute right-0 mt-3 w-56 overflow-hidden rounded-2xl border border-white/30 bg-white/80 p-2 text-sm shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-900/80"
+      <div className="min-h-screen px-3 py-3 sm:px-4 md:px-5 md:py-5">
+        <div className="shell-frame mx-auto flex min-h-[calc(100vh-24px)] w-full max-w-[1600px] flex-col overflow-hidden rounded-[32px]">
+          <header className="border-b border-white/20 bg-white/54 px-4 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/24 sm:px-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setMobileNavOpen((prev) => !prev)}
+                  className="btn-secondary px-3 py-2 lg:hidden"
+                  aria-label="Toggle workspace navigation"
                 >
+                  Menu
+                </button>
+
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-soft">AutoForge Cloud</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-3">
+                    <h1 className="text-lg font-extrabold tracking-tight text-slate-950 dark:text-slate-50">
+                      Commercial QA Workspace
+                    </h1>
+                    <span className="brand-badge rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                      {activeItem?.label || "Workspace"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="grid grid-cols-3 gap-2">
+                  {workspaceHighlights.map((item) => (
+                    <div key={item.label} className="rounded-2xl border border-white/30 bg-white/60 px-3 py-2 text-center dark:border-white/10 dark:bg-slate-900/42">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{item.label}</p>
+                      <p className={`mt-1 text-sm font-bold ${item.tone}`}>{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="relative" data-account-menu>
                   <button
                     type="button"
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      setShowUserModal(true);
-                    }}
-                    className="w-full rounded-xl px-3 py-2 text-left hover:bg-white/70 dark:hover:bg-slate-800/70"
+                    onClick={() => setAccountMenuOpen((prev) => !prev)}
+                    className="flex min-w-[220px] items-center justify-between gap-3 rounded-[22px] border border-white/30 bg-white/70 px-3 py-2.5 text-left shadow-sm dark:border-white/10 dark:bg-slate-900/46"
                   >
-                    Account overview
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[linear-gradient(135deg,#2563eb,#0f9f8c)] text-xs font-bold text-white shadow-[0_16px_30px_-18px_rgba(37,99,235,0.68)]">
+                        {initials}
+                      </span>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{user?.name || "Workspace User"}</p>
+                        <p className="text-xs text-muted">{user?.email}</p>
+                      </div>
+                    </div>
+                    <span className="text-xs font-semibold text-soft">Open</span>
                   </button>
-                  <Link
-                    to="/profile"
-                    className="block rounded-xl px-3 py-2 hover:bg-white/70 dark:hover:bg-slate-800/70"
-                    onClick={() => setAccountMenuOpen(false)}
-                  >
-                    Profile & security
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      onLogout();
-                    }}
-                    className="w-full rounded-xl px-3 py-2 text-left text-rose-600 hover:bg-rose-50/80 dark:text-rose-300 dark:hover:bg-rose-950/40"
-                  >
-                    Logout
-                  </button>
-                </Motion.div>
+
+                  <AnimatePresence>
+                    {accountMenuOpen ? (
+                      <Motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.18 }}
+                        className="absolute right-0 z-30 mt-3 w-64 overflow-hidden rounded-[24px] border border-white/30 bg-white/92 p-2.5 shadow-[0_28px_60px_-40px_rgba(15,23,42,0.42)] backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/86"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAccountMenuOpen(false);
+                            setShowUserModal(true);
+                          }}
+                          className="w-full rounded-2xl px-3 py-2.5 text-left text-sm hover:bg-[color:var(--accent-soft)] dark:hover:bg-slate-900"
+                        >
+                          Account overview
+                        </button>
+                        <Link
+                          to="/profile"
+                          className="block rounded-2xl px-3 py-2.5 text-sm hover:bg-[color:var(--accent-soft)] dark:hover:bg-slate-900"
+                          onClick={() => setAccountMenuOpen(false)}
+                        >
+                          Profile and security
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAccountMenuOpen(false);
+                            setMobileNavOpen(false);
+                            onLogout();
+                          }}
+                          className="w-full rounded-2xl px-3 py-2.5 text-left text-sm text-rose-600 hover:bg-rose-50 dark:text-rose-300 dark:hover:bg-rose-950/35"
+                        >
+                          Logout
+                        </button>
+                      </Motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {user?.emailVerified === false ? (
+            <div className="border-b border-amber-200/50 bg-amber-50/88 px-4 py-3 dark:border-amber-400/12 dark:bg-amber-500/10 sm:px-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">Verification pending</p>
+                  <p className="text-xs text-amber-800/85 dark:text-amber-100/72">
+                    Verify your email to unlock the full commercial workspace flow.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await resendVerification({ email: user?.email });
+                      pushToast({ message: "Verification email sent.", tone: "success" });
+                    } catch (error) {
+                      pushToast({ message: error?.response?.data?.message || "Failed to resend email.", tone: "error" });
+                    }
+                  }}
+                  className="btn-secondary"
+                >
+                  Resend verification
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="flex flex-1 flex-col lg:flex-row">
+            <AnimatePresence>
+              {mobileNavOpen ? (
+                <Motion.button
+                  type="button"
+                  className="fixed inset-0 z-20 bg-slate-950/36 lg:hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setMobileNavOpen(false)}
+                  aria-label="Close navigation"
+                />
               ) : null}
             </AnimatePresence>
+
+            <Motion.aside
+              initial={false}
+              animate={mobileNavOpen ? { x: 0 } : { x: 0 }}
+              className={`${
+                mobileNavOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+              } fixed inset-y-0 left-0 z-30 flex w-[310px] flex-col border-r border-white/20 bg-[linear-gradient(180deg,rgba(255,251,245,0.95),rgba(247,242,233,0.92),rgba(240,237,228,0.88))] px-4 py-5 shadow-[0_30px_70px_-42px_rgba(15,23,42,0.4)] transition-transform duration-300 dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(13,23,21,0.98),rgba(16,29,26,0.95),rgba(20,37,34,0.92))] lg:static lg:w-[320px] lg:translate-x-0 lg:shadow-none`}
+            >
+              <div className="brand-gradient-soft rounded-[28px] border border-white/30 p-5 dark:border-white/10">
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-soft">Workspace</p>
+                <h2 className="mt-2 text-xl font-extrabold text-slate-950 dark:text-slate-50">AutoForge Suite</h2>
+                <p className="mt-2 text-sm text-soft">
+                  A commercial-style command center for framework generation, test diagnostics, and delivery ops.
+                </p>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                  <div className="rounded-2xl bg-slate-950 px-4 py-3 text-slate-50 dark:bg-white dark:text-slate-950">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Plan</p>
+                    <p className="mt-2 text-sm font-bold">{user?.plan || "Starter"}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/35 bg-white/66 px-4 py-3 dark:border-white/10 dark:bg-slate-900/44">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-muted">Role</p>
+                    <p className="mt-2 text-sm font-bold capitalize text-slate-900 dark:text-slate-100">{user?.role || "user"}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/35 bg-white/66 px-4 py-3 dark:border-white/10 dark:bg-slate-900/44">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-muted">Last Login</p>
+                    <p className="mt-2 text-sm font-bold text-slate-900 dark:text-slate-100">{lastLoginLabel}</p>
+                  </div>
+                </div>
+              </div>
+
+              <nav className="mt-5 flex-1 space-y-2">
+                {visibleNavItems.map((item) => {
+                  const active = location.pathname === item.to;
+
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className={`group relative block overflow-hidden rounded-[24px] border px-4 py-3 ${
+                        active
+                          ? "border-[color:var(--border-strong)] bg-[color:var(--primary-ink)] shadow-[0_18px_40px_-34px_rgba(31,111,100,0.3)] dark:border-[color:var(--border-strong)] dark:bg-[color:var(--primary-ink)]"
+                          : "border-transparent bg-transparent hover:border-white/30 hover:bg-white/45 dark:hover:border-white/10 dark:hover:bg-slate-900/38"
+                      }`}
+                    >
+                      {active ? (
+                        <Motion.span
+                          layoutId="active-nav"
+                          className="absolute inset-y-3 left-0 w-1 rounded-r-full bg-[linear-gradient(180deg,var(--primary),var(--accent))]"
+                        />
+                      ) : null}
+
+                      <div className="flex items-start gap-3 pl-1">
+                        <span className={`grid h-10 w-10 place-items-center rounded-2xl text-xs font-bold ${
+                          active
+                            ? "bg-[linear-gradient(135deg,var(--primary),var(--accent))] text-white"
+                            : "bg-white/80 text-slate-700 dark:bg-slate-900/70 dark:text-slate-200"
+                        }`}>
+                          {item.short}
+                        </span>
+                        <div className="min-w-0">
+                          <p className={`text-sm font-semibold ${active ? "text-slate-950 dark:text-slate-50" : "text-slate-800 dark:text-slate-100"}`}>
+                            {item.label}
+                          </p>
+                          <p className="mt-1 text-xs text-muted">{item.description}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="mt-5 rounded-[24px] border border-white/30 bg-white/68 p-4 dark:border-white/10 dark:bg-slate-900/42">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted">Current Surface</p>
+                <p className="mt-2 text-base font-bold text-slate-900 dark:text-slate-100">{activeItem?.label}</p>
+                <p className="mt-2 text-sm text-muted">{activeItem?.description}</p>
+                <button type="button" onClick={onLogout} className="btn-secondary mt-4 w-full">
+                  Sign out
+                </button>
+              </div>
+            </Motion.aside>
+
+            <main id="app-main" className="min-w-0 flex-1 px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:py-5">
+              <div className="mx-auto w-full max-w-[1120px]">
+                <Outlet />
+              </div>
+            </main>
           </div>
         </div>
-
-        {user?.emailVerified === false ? (
-          <GlassCard className="mx-auto mb-4 w-full max-w-7xl p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Verify your email</p>
-                <p className="text-xs text-muted">Please verify your email to unlock the full workspace.</p>
-              </div>
-              <button
-                type="button"
-                onClick={async () => {
-                  try {
-                    await resendVerification({ email: user?.email });
-                    pushToast({ message: "Verification email sent.", tone: "success" });
-                  } catch (error) {
-                    pushToast({ message: error?.response?.data?.message || "Failed to resend email.", tone: "error" });
-                  }
-                }}
-                className="btn-secondary"
-              >
-                Resend verification
-              </button>
-            </div>
-          </GlassCard>
-        ) : null}
-
-        <main id="app-main" className="mx-auto grid w-full max-w-7xl gap-4 md:grid-cols-[auto,1fr] md:gap-5">
-          <GlassCard
-            className="relative overflow-hidden p-4 md:p-5"
-            animate={{ width: collapsed ? 96 : 272 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-          >
-            <button
-              type="button"
-              onClick={() => setCollapsed((prev) => !prev)}
-              className="glow-hover absolute right-3 top-3 rounded-lg border border-white/30 bg-white/45 px-2 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200"
-              aria-label="Toggle sidebar"
-            >
-              {collapsed ? ">" : "<"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowUserModal(true)}
-              className="mb-7 flex w-full items-center gap-3 text-left"
-            >
-              <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-sm font-semibold text-white shadow-md">
-                {initials}
-              </div>
-              <AnimatePresence>
-                {!collapsed ? (
-                  <Motion.div
-                    key="sidebar-user"
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -8 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">AutoForge AI</p>
-                    <p className="text-xs text-muted">{user?.email}</p>
-                  </Motion.div>
-                ) : null}
-              </AnimatePresence>
-            </button>
-
-            <nav className="space-y-2">
-              {visibleNavItems.map((item) => {
-                const active = location.pathname === item.to;
-
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={`relative flex items-center rounded-xl px-3 py-2 text-sm font-medium ${
-                      active ? "text-indigo-700 dark:text-indigo-300" : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-slate-100"
-                    }`}
-                  >
-                    {active ? (
-                      <Motion.span
-                        layoutId="active-nav"
-                        className="absolute inset-0 -z-10 rounded-xl bg-indigo-100/80 dark:bg-indigo-500/20"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
-                      />
-                    ) : null}
-                    <span className="w-6 text-xs font-bold text-cyan-600 dark:text-cyan-300">{item.short}</span>
-                    <AnimatePresence>
-                      {!collapsed ? (
-                        <Motion.span
-                          key={`label-${item.to}`}
-                          initial={{ opacity: 0, x: -4 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -4 }}
-                          transition={{ duration: 0.18 }}
-                        >
-                          {item.label}
-                        </Motion.span>
-                      ) : null}
-                    </AnimatePresence>
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <button type="button" onClick={onLogout} className="btn-secondary mt-8 w-full glow-hover">
-              {collapsed ? "Out" : "Logout"}
-            </button>
-          </GlassCard>
-
-          <GlassCard className="p-4 sm:p-6 md:p-8">
-            <Outlet />
-          </GlassCard>
-        </main>
 
         <AnimatePresence>
           {showUserModal ? (
@@ -326,7 +381,7 @@ export const AppLayout = () => {
             >
               <button
                 type="button"
-                className="absolute inset-0 cursor-default bg-slate-950/40 backdrop-blur-sm"
+                className="absolute inset-0 cursor-default bg-slate-950/42 backdrop-blur-sm"
                 onClick={() => setShowUserModal(false)}
                 aria-label="Close user modal"
               />
@@ -335,71 +390,60 @@ export const AppLayout = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 12, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
-                className="relative w-full max-w-md"
+                className="relative w-full max-w-lg"
               >
                 <GlassCard className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-500 text-base font-semibold text-white shadow-md">
+                      <div className="grid h-14 w-14 place-items-center rounded-[22px] bg-[linear-gradient(135deg,var(--primary),var(--accent))] text-sm font-bold text-white shadow-[0_18px_40px_-26px_rgba(31,111,100,0.4)]">
                         {initials}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{user?.name || "User"}</p>
-                        <p className="text-xs text-muted">{user?.email}</p>
+                        <p className="text-base font-bold text-slate-900 dark:text-slate-100">{user?.name || "Workspace User"}</p>
+                        <p className="text-sm text-muted">{user?.email}</p>
                       </div>
                     </div>
                     <button
                       type="button"
                       onClick={() => setShowUserModal(false)}
-                      className="rounded-lg border border-white/30 bg-white/55 px-2 py-1 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-slate-900/50 dark:text-slate-200"
+                      className="btn-secondary px-3 py-2"
                     >
                       Close
                     </button>
                   </div>
 
-                  <div className="mt-5 space-y-3 rounded-2xl border border-white/20 bg-white/50 p-4 text-sm text-slate-700 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-200">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.22em] text-muted">Role</span>
-                      <span className="text-sm font-semibold capitalize">{user?.role || "user"}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.22em] text-muted">Status</span>
-                      <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-300">Active</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.22em] text-muted">Organization</span>
-                      <span className="text-sm font-semibold">{user?.organization || "Not set"}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.22em] text-muted">Plan</span>
-                      <span className="text-sm font-semibold">{user?.plan || "Starter"}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.22em] text-muted">Last Login</span>
-                      <span className="text-sm font-semibold">{lastLoginLabel}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-[0.22em] text-muted">Phone</span>
-                      <span className="text-sm font-semibold">{user?.phone || "Not set"}</span>
-                    </div>
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    {[
+                      ["Role", user?.role || "user"],
+                      ["Plan", user?.plan || "Starter"],
+                      ["Organization", user?.organization || "Not set"],
+                      ["Phone", user?.phone || "Not set"],
+                      ["Last Login", lastLoginLabel],
+                      ["Status", user?.emailVerified ? "Verified" : "Verification pending"]
+                    ].map(([label, value]) => (
+                      <div key={label} className="rounded-2xl border border-white/20 bg-white/58 p-4 dark:border-white/10 dark:bg-slate-900/42">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted">{label}</p>
+                        <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-100">{value}</p>
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="mt-6 flex flex-col gap-2">
-                    <button type="button" onClick={onSwitchAccount} className="btn-primary w-full">
-                      Login with different account
+                  <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+                    <button type="button" onClick={() => navigate("/profile")} className="btn-primary w-full">
+                      Open profile
                     </button>
                     <button type="button" onClick={onLogout} className="btn-secondary w-full">
                       Logout
                     </button>
                   </div>
 
-                  <div className="mt-5 border-t border-white/20 pt-5 dark:border-white/10">
+                  <div className="mt-6 border-t border-white/20 pt-5 dark:border-white/10">
                     <button
                       type="button"
                       onClick={() => setEditingProfile((prev) => !prev)}
-                      className="btn-secondary w-full"
+                      className="btn-ghost w-full rounded-2xl border border-white/20 dark:border-white/10"
                     >
-                      {editingProfile ? "Close edit" : "Edit profile here"}
+                      {editingProfile ? "Close quick edit" : "Quick edit account"}
                     </button>
 
                     <AnimatePresence>
@@ -414,31 +458,15 @@ export const AppLayout = () => {
                         >
                           <label className="space-y-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
                             Name
-                            <input
-                              className="input"
-                              name="name"
-                              value={profileForm.name}
-                              onChange={onProfileChange}
-                              required
-                            />
+                            <input className="input" name="name" value={profileForm.name} onChange={onProfileChange} required />
                           </label>
                           <label className="space-y-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
                             Organization
-                            <input
-                              className="input"
-                              name="organization"
-                              value={profileForm.organization}
-                              onChange={onProfileChange}
-                            />
+                            <input className="input" name="organization" value={profileForm.organization} onChange={onProfileChange} />
                           </label>
                           <label className="space-y-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
                             Phone
-                            <input
-                              className="input"
-                              name="phone"
-                              value={profileForm.phone}
-                              onChange={onProfileChange}
-                            />
+                            <input className="input" name="phone" value={profileForm.phone} onChange={onProfileChange} />
                           </label>
                           <label className="space-y-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted">
                             Plan
@@ -452,13 +480,7 @@ export const AppLayout = () => {
                           </label>
 
                           {profileMessage.text ? (
-                            <p
-                              className={`text-xs ${
-                                profileMessage.tone === "error"
-                                  ? "text-rose-600 dark:text-rose-300"
-                                  : "text-emerald-600 dark:text-emerald-300"
-                              }`}
-                            >
+                            <p className={`text-xs ${profileMessage.tone === "error" ? "text-rose-600 dark:text-rose-300" : "text-emerald-600 dark:text-emerald-300"}`}>
                               {profileMessage.text}
                             </p>
                           ) : null}

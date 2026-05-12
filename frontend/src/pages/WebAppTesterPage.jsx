@@ -10,8 +10,8 @@ import { testService } from "../services/api/testService";
 
 const severityClassMap = {
   High: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-200",
-  Medium: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-200",
-  Low: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200"
+  Medium: "accent-badge",
+  Low: "brand-badge"
 };
 
 const getEntrySeverity = (entry, kind) => {
@@ -211,7 +211,7 @@ export const WebAppTesterPage = () => {
                     onClick={() => setCurrentReport(report)}
                     className={`w-full rounded-xl border p-3 text-left text-xs ${
                       active
-                        ? "border-indigo-400 bg-indigo-50/70 dark:border-indigo-500 dark:bg-indigo-950/30"
+                        ? "border-[color:var(--border-strong)] bg-[color:var(--primary-ink)] dark:border-[color:var(--border-strong)] dark:bg-[color:var(--primary-ink)]"
                         : "border-white/20 bg-white/35 dark:border-white/10 dark:bg-slate-900/35"
                     }`}
                   >

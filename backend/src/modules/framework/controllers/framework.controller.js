@@ -15,16 +15,58 @@ const issueDownloadToken = () => {
   return { token, tokenHash, expiresAt };
 };
 
-const buildDownloadLink = (frameworkId, token) => {
-  return `${env.appBaseUrl}/api/framework/download/${frameworkId.toString()}?token=${token}`;
+const buildDownloadPath = (frameworkId) => `/api/framework/download/${frameworkId.toString()}`;
+
+const ensureUserId = (req) => {
+  if (!req.auth?.userId) {
+    throw new AppError("Unauthorized", 401);
+  }
+
+  return req.auth.userId;
 };
 
+const ensureValidFrameworkId = (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new AppError("Invalid framework id", 400);
+  }
+};
+
+const ensureDownloadAccess = async (framework) => {
+  const download = issueDownloadToken();
+  framework.downloadTokenHash = download.tokenHash;
+  framework.downloadTokenExpiresAt = download.expiresAt;
+  await framework.save();
+
+  return download;
+};
+
+const buildFrameworkSummary = (framework, issuedToken = null) => ({
+  id: framework._id.toString(),
+  language: framework.language,
+  automationTool: framework.automationTool,
+  pattern: framework.pattern,
+  testRunner: framework.testRunner,
+  cicd: framework.cicd,
+  dockerSupport: framework.dockerSupport,
+  filesCount: framework.files?.length || 0,
+  folderCount: framework.folderStructure?.length || 0,
+  createdAt: framework.createdAt,
+  updatedAt: framework.updatedAt,
+  download: {
+    path: buildDownloadPath(framework._id),
+    token: issuedToken,
+    expiresAt: framework.downloadTokenExpiresAt?.toISOString() || null
+  }
+});
+
 export const generateFramework = async (req, res) => {
+  const userId = ensureUserId(req);
   const config = req.body;
   const generated = await generateFrameworkWithAI(config);
   const download = issueDownloadToken();
 
   const framework = await Framework.create({
+    userId,
     ...config,
     prompt: generated.prompt,
     folderStructure: generated.folderStructure,
@@ -40,27 +82,75 @@ export const generateFramework = async (req, res) => {
       id: framework._id,
       folderStructure: framework.folderStructure,
       files: framework.files,
-      download: {
-        link: buildDownloadLink(framework._id, download.token),
-        expiresAt: download.expiresAt.toISOString()
+      summary: buildFrameworkSummary(framework, download.token)
+    }
+  });
+};
+
+export const listFrameworks = async (req, res) => {
+  const userId = ensureUserId(req);
+  const { page, limit } = req.query;
+  const skip = (page - 1) * limit;
+
+  const [frameworks, total] = await Promise.all([
+    Framework.find({ userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    Framework.countDocuments({ userId })
+  ]);
+
+  const items = frameworks.map((framework) => buildFrameworkSummary(framework));
+
+  res.status(200).json({
+    success: true,
+    data: {
+      items,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / limit))
       }
     }
   });
 };
 
+export const createFrameworkDownloadAccess = async (req, res) => {
+  const userId = ensureUserId(req);
+  const { id } = req.params;
+
+  ensureValidFrameworkId(id);
+
+  const framework = await Framework.findOne({ _id: id, userId });
+  if (!framework) {
+    throw new AppError("Framework not found", 404);
+  }
+
+  const download = await ensureDownloadAccess(framework);
+
+  res.status(200).json({
+    success: true,
+    data: {
+      path: buildDownloadPath(framework._id),
+      token: download.token,
+      expiresAt: download.expiresAt.toISOString()
+    }
+  });
+};
+
 export const downloadFramework = async (req, res) => {
+  const userId = ensureUserId(req);
   const { id } = req.params;
   const token = typeof req.query.token === "string" ? req.query.token : "";
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new AppError("Invalid framework id", 400);
-  }
+  ensureValidFrameworkId(id);
 
   if (!token || token.length < 20) {
     throw new AppError("Download token is required", 401);
   }
 
-  const framework = await Framework.findById(id);
+  const framework = await Framework.findOne({ _id: id, userId });
   if (!framework) {
     throw new AppError("Framework not found", 404);
   }
@@ -106,4 +196,21 @@ export const downloadFramework = async (req, res) => {
   });
 
   res.on("close", cleanup);
+};
+
+export const deleteFramework = async (req, res) => {
+  const userId = ensureUserId(req);
+  const { id } = req.params;
+
+  ensureValidFrameworkId(id);
+
+  const framework = await Framework.findOneAndDelete({ _id: id, userId });
+  if (!framework) {
+    throw new AppError("Framework not found", 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Framework deleted"
+  });
 };
