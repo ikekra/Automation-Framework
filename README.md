@@ -4,7 +4,7 @@ AutoForge is a multi-app project with:
 
 - `backend`: Express + MongoDB API for auth, framework generation, web app analysis, queued jobs, and internal diagnostics
 - `frontend`: Vite + React product console using JWT auth against the backend
-- `landing`: Next.js marketing site with separate social sign-in flow via NextAuth
+- `landing`: Next.js marketing site that routes users into the main product app
 
 ## Current Architecture
 
@@ -28,10 +28,10 @@ The Vite app is the main product workspace. It uses:
 
 ### Landing
 
-The Next.js app is a separate portfolio/marketing surface. It uses:
+The Next.js app is the public marketing surface. It uses:
 
-- NextAuth with GitHub and Google
-- protected `/dashboard`
+- public marketing and contact pages
+- app handoff routes for `/signin`, `/dashboard`, and gated entry points
 - links into the Vite app via `NEXT_PUBLIC_FRONTEND_APP_URL`
 
 ## Run Locally
@@ -100,14 +100,6 @@ Create `landing/.env` with the values you need:
 ```env
 NEXT_PUBLIC_FRONTEND_APP_URL=http://localhost:5173
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5000
-
-AUTH_SECRET=replace-me
-AUTH_GITHUB_ID=replace-me
-AUTH_GITHUB_SECRET=replace-me
-AUTH_GOOGLE_ID=replace-me
-AUTH_GOOGLE_SECRET=replace-me
-
-AUTH_ADMIN_EMAILS=you@example.com
 ```
 
 Start it:
@@ -154,9 +146,8 @@ The framework generation flow now:
 
 ## Recommended Next Step
 
-The next bigger concept is auth/product consolidation:
+The next strong product step is deeper UI treatment inside the main app:
 
-- decide whether `landing` should stay marketing-only
-- or merge the product experience into a single auth model
-
-That is the main remaining architecture split in the project.
+- upgrade more internal routes to match the new SaaS shell
+- unify feature-level empty states, tables, and detail views
+- expand backend tests around authenticated download and ownership flows

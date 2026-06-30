@@ -3,9 +3,9 @@ import { Providers } from "@/components/providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AutoFlow | Automation Framework Demo",
+  title: "AutoForge | Automation Workspace",
   description:
-    "A student-built automation framework demo for reliable pipelines, observability, and testing workflows."
+    "Commercial-style marketing site for AutoForge, with handoff into the main automation workspace."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

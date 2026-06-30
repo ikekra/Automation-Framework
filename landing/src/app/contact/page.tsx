@@ -1,22 +1,23 @@
-﻿"use client";
+"use client";
 
 import type { FormEvent } from "react";
 import Link from "next/link";
 
 const contactEmail = "workforiris78@gmail.com";
+const appUrl = process.env.NEXT_PUBLIC_FRONTEND_APP_URL || "http://localhost:5173";
 
 export default function ContactPage() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name");
-    const role = formData.get("role");
+    const topic = formData.get("topic");
     const message = formData.get("message");
-    const subject = "Internship / Junior Role - " + (name || "Prospective Employer");
+    const subject = "AutoForge Inquiry - " + (name || "New Contact");
     const bodyLines = [
       "Hi,",
       "",
-      "I'm interested in " + (role || "internship or junior") + " opportunities.",
+      "I'm reaching out about " + (topic || "the product or a demo") + ".",
       "",
       message || "",
       "",
@@ -47,7 +48,7 @@ export default function ContactPage() {
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: "linear-gradient(90deg, var(--primary), var(--secondary))" }}
             >
-              ⚡ AutoFlow
+              AutoForge
             </span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
@@ -61,10 +62,10 @@ export default function ContactPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-16 sm:px-6">
         <section className="glass-card rounded-3xl px-8 py-12">
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--dim-foreground)]">Contact</p>
-          <h1 className="mt-4 text-3xl font-semibold sm:text-4xl">Open to internships and junior roles</h1>
+          <h1 className="mt-4 text-3xl font-semibold sm:text-4xl">Talk to us about the product, rollout, or a live demo</h1>
           <p className="mt-3 max-w-2xl text-sm text-[var(--muted-foreground)]">
-            I'm a student focused on automation tools and thoughtful UI systems. If this demo looks useful, I'd love to
-            connect about internship or junior developer roles.
+            AutoForge is positioned as a commercial-style automation workspace. Use this page for product questions,
+            implementation conversations, or partnership-style outreach.
           </p>
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -80,11 +81,11 @@ export default function ContactPage() {
                 />
               </label>
               <label className="text-xs uppercase tracking-[0.2em] text-[var(--dim-foreground)]">
-                Role Type
+                Topic
                 <input
-                  name="role"
+                  name="topic"
                   type="text"
-                  placeholder="Internship / Junior / Contract"
+                  placeholder="Demo / Pricing / Partnership / Setup"
                   autoComplete="organization-title"
                   className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--foreground)]"
                 />
@@ -95,7 +96,7 @@ export default function ContactPage() {
               <textarea
                 name="message"
                 rows={5}
-                placeholder="Tell me about the role or team"
+                placeholder="Tell us what you want to discuss"
                 autoComplete="off"
                 required
                 className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--foreground)]"
@@ -108,9 +109,9 @@ export default function ContactPage() {
               <a href={`mailto:${contactEmail}`} className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
                 Direct email
               </a>
-              <Link href="/" className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
-                Back to demo
-              </Link>
+              <a href={`${appUrl}/register`} className="btn-secondary rounded-full px-6 py-3 text-sm font-semibold">
+                Create workspace
+              </a>
             </div>
             <p className="text-xs text-[var(--dim-foreground)]">
               Draft opens in your email app. Nothing is sent automatically. Typical response time: 1-2 business days.
@@ -121,19 +122,19 @@ export default function ContactPage() {
 
         <section className="grid gap-6 md:grid-cols-2">
           <div className="glass-card rounded-3xl px-6 py-8">
-            <h2 className="text-lg font-semibold">What this project shows</h2>
+            <h2 className="text-lg font-semibold">Best fit conversations</h2>
             <ul className="mt-4 flex flex-col gap-3 text-sm text-[var(--muted-foreground)]">
-              <li>Clean, readable automation configs</li>
-              <li>Thoughtful UI details and hierarchy</li>
-              <li>Practical observability concepts</li>
+              <li>Implementation planning for QA automation teams</li>
+              <li>Demo walkthroughs of framework generation and analysis</li>
+              <li>Product feedback, collaboration, or pilot-style usage</li>
             </ul>
           </div>
           <div className="glass-card rounded-3xl px-6 py-8">
-            <h2 className="text-lg font-semibold">Looking for</h2>
+            <h2 className="text-lg font-semibold">Inside the app</h2>
             <ul className="mt-4 flex flex-col gap-3 text-sm text-[var(--muted-foreground)]">
-              <li>Internship or junior developer roles</li>
-              <li>Frontend or automation tooling teams</li>
-              <li>Mentorship and constructive feedback</li>
+              <li>JWT-based account system connected to the backend</li>
+              <li>Framework generation with account-backed history</li>
+              <li>Web app analysis, diagnostics, and downloadable output</li>
             </ul>
           </div>
         </section>

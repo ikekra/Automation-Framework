@@ -1,57 +1,40 @@
-import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
-import { GitHubSignInButton } from "@/components/auth/GitHubSignInButton";
-import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
-const errorMessages: Record<string, string> = {
-  AccessDenied: "Access denied. Please try again or use a different account.",
-  Configuration: "Authentication provider is not configured correctly.",
-  EmailNotAvailable: "Your GitHub account does not expose an email address.",
-  OAuthAccountNotLinked: "This account is already linked to another provider.",
-  OAuthCallbackError: "OAuth callback failed. Please retry.",
-  OAuthCreateAccount: "Could not create account from OAuth profile.",
-  OAuthSignin: "GitHub sign-in failed. Please try again.",
-  SessionRequired: "Please sign in to continue."
-};
-
-export default async function SignInPage({
-  searchParams
-}: {
-  searchParams: Promise<{ error?: string; callbackUrl?: string }>;
-}) {
-  const params = await searchParams;
-  const errorText = params.error ? errorMessages[params.error] || "Authentication failed. Please try again." : "";
+export default async function SignInPage() {
+  const appUrl = process.env.NEXT_PUBLIC_FRONTEND_APP_URL || "http://localhost:5173";
 
   return (
     <div className="min-h-screen surface-gradient">
       <Navbar />
       <main className="px-4 py-14 sm:px-6">
-        <div className="mx-auto w-full max-w-md">
-          <Card className="p-6">
-            <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Sign in to AutoForge AI</h1>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              Choose a provider to continue securely.
+        <div className="mx-auto w-full max-w-2xl">
+          <Card className="p-6 sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+              Product Access
+            </p>
+            <h1 className="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100">
+              Continue in the main AutoForge app
+            </h1>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+              The marketing site stays public, but the real workspace now lives in the main product app. Use the app
+              login or registration flow to access framework generation, history, and diagnostics.
             </p>
 
-            {errorText ? (
-              <div className="mt-4 flex items-start gap-2 rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/30 dark:text-rose-200">
-                <AlertTriangle className="mt-0.5 h-4 w-4" />
-                <span>{errorText}</span>
-              </div>
-            ) : null}
-
-            <div className="mt-6 space-y-3">
-              <GoogleSignInButton
-                className="w-full"
-                callbackUrl={params.callbackUrl || "/dashboard"}
-                label="Continue with Google"
-              />
-              <GitHubSignInButton
-                className="w-full"
-                callbackUrl={params.callbackUrl || "/dashboard"}
-                label="Continue with GitHub"
-              />
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href={`${appUrl}/login`}
+                className="inline-flex rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+              >
+                Open app login
+              </Link>
+              <Link
+                href={`${appUrl}/register`}
+                className="inline-flex rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+              >
+                Create account
+              </Link>
             </div>
           </Card>
         </div>
